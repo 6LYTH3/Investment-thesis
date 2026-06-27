@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MA — Investment Thesis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+
+  :root {
+    --black: #0a0a0a;
+    --card: #111111;
+    --card2: #161616;
+    --border: #252525;
+    --gold: #D4A843;
+    --gold-dim: #8a6c29;
+    --red: #E05252;
+    --green: #4CAF7D;
+    --blue: #5B8BFF;
+    --text: #E8E8E8;
+    --muted: #888;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans Thai', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  /* HERO */
+  .hero {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .hero-title span { color: var(--gold); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 10px;
+    font-weight: 300;
+  }
+
+  .verdict-badge {
+    background: var(--gold);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    padding: 6px 14px;
+    border-radius: 2px;
+    white-space: nowrap;
+    align-self: start;
+  }
+
+  /* NAV TABS */
+  .nav-wrap {
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--black);
+    z-index: 100;
+  }
+
+  .nav {
+    display: flex;
+    gap: 0;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px;
+    overflow-x: auto;
+  }
+
+  .nav button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav button.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .nav button:hover:not(.active) { color: var(--text); }
+
+  /* SECTIONS */
+  .section { display: none; max-width: 960px; margin: 0 auto; padding: 40px 40px 0; }
+  .section.active { display: block; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* STAT BLOCKS */
+  .stat-block {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+
+  .stat-num.green { color: var(--green); }
+  .stat-num.gold { color: var(--gold); }
+  .stat-num.blue { color: var(--blue); }
+  .stat-num.red { color: var(--red); }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* MOAT BARS */
+  .moat-item {
+    margin-bottom: 20px;
+  }
+
+  .moat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .moat-name {
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .moat-score {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  .moat-bar-bg {
+    background: var(--border);
+    border-radius: 2px;
+    height: 6px;
+  }
+
+  .moat-bar-fill {
+    height: 6px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 1s ease;
+  }
+
+  .moat-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* GROWTH TABLE */
+  .growth-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .growth-table th {
+    text-align: right;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .growth-table th:first-child { text-align: left; }
+
+  .growth-table td {
+    padding: 10px 12px;
+    text-align: right;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .growth-table td:first-child {
+    text-align: left;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .growth-table .up { color: var(--green); }
+  .growth-table .down { color: var(--red); }
+  .growth-table .neutral { color: var(--gold); }
+
+  /* RISK CARDS */
+  .risk-card {
+    border-left: 3px solid var(--red);
+    background: var(--card);
+    border-radius: 0 4px 4px 0;
+    padding: 20px 20px 20px 24px;
+    margin-bottom: 14px;
+  }
+
+  .risk-title {
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .risk-body { color: var(--text); font-size: 13px; }
+  .risk-verdict {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  /* THESIS SUMMARY */
+  .thesis-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thesis-block::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+  }
+
+  .thesis-heading {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .thesis-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* SCUTTLEBUTT */
+  .scout-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .scout-icon {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    background: #1a1400;
+    border: 1px solid var(--gold-dim);
+    padding: 6px 10px;
+    border-radius: 2px;
+    white-space: nowrap;
+    align-self: start;
+    margin-top: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  .scout-content strong { font-weight: 600; display: block; margin-bottom: 4px; }
+  .scout-content p { font-size: 13px; color: var(--muted); }
+
+  /* VALUATION TABLE */
+  .val-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .val-label { font-size: 13px; color: var(--muted); }
+  .val-num { font-family: var(--mono); font-size: 14px; }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-left: 8px;
+  }
+  .badge-green { background: #1a3326; color: var(--green); }
+  .badge-red { background: #2e1515; color: var(--red); }
+  .badge-yellow { background: #2a1e00; color: var(--gold); }
+
+  /* CHART BAR */
+  .bar-chart { margin-top: 16px; }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .bar-year {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    width: 36px;
+    flex-shrink: 0;
+  }
+
+  .bar-track { flex: 1; background: var(--border); border-radius: 2px; height: 20px; position: relative; }
+
+  .bar-fill {
+    height: 20px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #2a3d1a, var(--green));
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    transition: width 1.2s ease;
+  }
+
+  .bar-fill.gold-bar { background: linear-gradient(90deg, #2a1e00, var(--gold)); }
+  .bar-fill.blue-bar { background: linear-gradient(90deg, #0d1a33, var(--blue)); }
+
+  .bar-val {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  footer {
+    max-width: 960px;
+    margin: 48px auto 0;
+    padding: 24px 40px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px 24px; grid-template-columns: 1fr; }
+    .hero-title { font-size: 52px; }
+    .section { padding: 28px 20px 0; }
+    .nav { padding: 0 20px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">AI Investment Analyst — Deep Dive Report</div>
+    <div class="hero-title">MASTER<span>CARD</span></div>
+    <div class="hero-sub">NYSE: MA &nbsp;·&nbsp; Payment Technology &nbsp;·&nbsp; วิเคราะห์ ณ มิถุนายน 2569</div>
+  </div>
+  <div class="verdict-badge">QUALITY COMPOUNDER</div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="active" onclick="show('exec')">Executive Summary</button>
+    <button onclick="show('moat')">Moat Analysis</button>
+    <button onclick="show('financials')">Financials</button>
+    <button onclick="show('risks')">Key Risks</button>
+    <button onclick="show('valuation')">Valuation</button>
+    <button onclick="show('scuttlebutt')">Scuttlebutt</button>
+    <button onclick="show('position')">📌 Position Plan</button>
+  </div>
+</div>
+
+<!-- EXEC SUMMARY -->
+<div id="exec" class="section active">
+  <div class="section-label">01 — Executive Summary</div>
+
+  <div class="thesis-block">
+    <div class="thesis-heading">ธุรกิจนี้ทำอะไร</div>
+    <div class="thesis-text">
+      Mastercard คือ <strong>โครงสร้างพื้นฐานการชำระเงินระดับโลก</strong> ที่เชื่อมโยงธนาคาร พ่อค้า และผู้บริโภคกว่า 3 พันล้านคนใน 200+ ประเทศผ่าน Network สองชั้น (Two-sided Network) โดยเก็บค่าธรรมเนียมจากทุก Transaction ที่วิ่งบนรางของตน — ไม่ว่าจะเป็นบัตรเครดิต เดบิต หรือดิจิทัล<br><br>
+      บริษัท<strong>ไม่ได้ให้สินเชื่อ ไม่มีความเสี่ยง Credit Loss</strong> ทำหน้าที่เป็นแค่ "ผู้ดูแลราง" ที่เก็บ Toll Fee จากปริมาณการใช้จ่ายที่วิ่งผ่าน จึงเป็น Asset-light Business Model ที่มี Operating Leverage สูงมาก<br><br>
+      ในปี 2024 Mastercard ประมวลผลการชำระเงินมูลค่า <strong>~9.8 ล้านล้านดอลลาร์</strong> และสร้างรายได้ 28.2 พันล้านดอลลาร์ด้วย Operating Margin เกิน 57%
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num green">~95%</div>
+      <div class="stat-label">ROIC (TTM)</div>
+      <div class="stat-sub">เกณฑ์ผ่านคือ >15%</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num gold">~57%</div>
+      <div class="stat-label">Operating Margin</div>
+      <div class="stat-sub">คงที่ต่อเนื่อง 5 ปี</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num blue">14–17%</div>
+      <div class="stat-label">Revenue Growth YoY</div>
+      <div class="stat-sub">2024–2025 ทุกไตรมาส</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">คำตัดสิน — Investment Snapshot</div>
+    <div class="val-row">
+      <div class="val-label">ประเภทธุรกิจ</div>
+      <div class="val-num">Toll Road on Global Commerce <span class="badge badge-green">PASS</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">คุณภาพ Moat</div>
+      <div class="val-num">Wide Moat — Expanding <span class="badge badge-green">STRONG</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">Growth Quality</div>
+      <div class="val-num">Revenue + FCF โตพร้อมกัน <span class="badge badge-green">CONSISTENT</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">ความเสี่ยงหลัก</div>
+      <div class="val-num">Regulation + Disintermediation <span class="badge badge-yellow">MONITOR</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">Valuation (Jun 2026)</div>
+      <div class="val-num">~29x TTM P/E (ต่ำกว่า avg 5Y ที่ ~37x) <span class="badge badge-yellow">FAIR-ATTRACTIVE</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOAT -->
+<div id="moat" class="section">
+  <div class="section-label">02 — Moat Analysis</div>
+
+  <div class="card">
+    <div class="card-title">คูเมือง 4 ชั้น — ประเมินความแข็งแกร่ง</div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🔗 Network Effect (Two-Sided)</div>
+        <div class="moat-score">9.5 / 10 — EXPANDING</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:95%"></div></div>
+      <div class="moat-desc">ยิ่ง Merchant รับบัตร MA มาก → ผู้บริโภคยิ่งอยากมีบัตร MA → ยิ่งดึง Merchant มากขึ้นอีก วงจรนี้หมุนมา 60 ปีและแข็งแกร่งขึ้นทุกปี ปัจจุบันมี Merchant รองรับ >100 ล้านรายทั่วโลก ทำให้คู่แข่งรายใหม่แทบเป็นไปไม่ได้ที่จะ Replicate</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🔄 Switching Costs</div>
+        <div class="moat-score">8.5 / 10 — STABLE</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:85%"></div></div>
+      <div class="moat-desc">ธนาคารที่ออกบัตร MA ต้องลงทุนกับระบบ IT, การฝึกอบรม และโปรแกรม Loyalty มหาศาล การเปลี่ยนไป Visa หรือรายอื่นมีต้นทุนสูงมากทั้งเงินและเวลา สัญญาระยะยาว 3-7 ปีช่วยล็อค Revenue</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🏷️ Brand & Trust</div>
+        <div class="moat-score">8.0 / 10 — STABLE</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:80%"></div></div>
+      <div class="moat-desc">แบรนด์ Mastercard ได้รับความไว้วางใจจาก Consumer และ Merchant ทั่วโลกในฐานะสัญลักษณ์ความน่าเชื่อถือ Security และ Global Acceptance — สิ่งนี้สร้างไม่ได้ในระยะสั้น</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">📊 Data & Technology Moat</div>
+        <div class="moat-score">8.0 / 10 — EXPANDING</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:80%"></div></div>
+      <div class="moat-desc">ข้อมูล Transaction หลายพันล้านรายการต่อวันถูกใช้สร้าง Value-Added Services (Fraud Detection, Analytics, Cybersecurity) ซึ่งเป็น Revenue stream ที่เติบโตเร็วกว่า Core Business (+16–25% YoY)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">การประเมิน Moat Direction</div>
+    <p style="font-size:13px; line-height:1.8">
+      ⬆️ <strong>Moat กำลังขยาย</strong> — Value-Added Services ที่เติบโต 16–25% YoY แสดงว่า Mastercard กำลังสร้างคูเมืองชั้นที่สอง นอกเหนือจาก Core Payment Network การลงทุนใน Real-time Payments, Open Banking, และ AI-powered Fraud Detection ทำให้ธนาคารและ Merchant "ติด" กับ Ecosystem ของ MA มากขึ้น<br><br>
+      ⚠️ <strong>จุดเฝ้าระวัง</strong> — A2A (Account-to-Account) Payments และ CBDC อาจ Bypass เครือข่าย MA ได้ในระยะยาว แต่ MA เองก็ลงทุนใน Open Banking Infrastructure เพื่อ Hedge ความเสี่ยงนี้
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Management & Capital Allocation</div>
+    <div class="val-row">
+      <div class="val-label">CEO Michael Miebach (ดำรงตำแหน่งตั้งแต่ 2021)</div>
+      <div class="val-num"><span class="badge badge-green">COMPETENT</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">Share Buyback (2024)</div>
+      <div class="val-num">~2% Shares Outstanding/ปี <span class="badge badge-green">CONSISTENT</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">Dividend Policy</div>
+      <div class="val-num">Conservative (~0.6% yield) <span class="badge badge-yellow">GROWTH FOCUS</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">M&A ล่าสุด</div>
+      <div class="val-num">Acquisitions ใน Cybersecurity & Data Analytics <span class="badge badge-green">ON-STRATEGY</span></div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-top:16px; line-height:1.7">ผู้บริหารจัดสรรทุนได้ดี: Reinvest ในธุรกิจที่มี ROIC สูง + คืนเงินผู้ถือหุ้นผ่าน Buyback สม่ำเสมอ ไม่มีประวัติ Acquisition ที่ทำลายมูลค่า</p>
+  </div>
+</div>
+
+<!-- FINANCIALS -->
+<div id="financials" class="section">
+  <div class="section-label">03 — Financial Quality Analysis</div>
+
+  <div class="card">
+    <div class="card-title">Revenue Growth — ไตรมาสต่อไตรมาส (YoY %)</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-year">Q1'24</div>
+        <div class="bar-track"><div class="bar-fill" style="width:55%"><span class="bar-val">+10%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q2'24</div>
+        <div class="bar-track"><div class="bar-fill" style="width:55%"><span class="bar-val">+11%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q3'24</div>
+        <div class="bar-track"><div class="bar-fill" style="width:59%"><span class="bar-val">+13%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q4'24</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%"><span class="bar-val">+14%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q1'25</div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%"><span class="bar-val">+14%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q2'25</div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%"><span class="bar-val">+17%</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">Q3'25</div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%"><span class="bar-val">+17%</span></div></div>
+      </div>
+    </div>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">✅ Growth ไม่ได้ชะลอ — กลับเร่งขึ้นในปี 2025 โดยมาจาก Value-Added Services ที่โต 23–25%</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Growth Triangle — ความสอดคล้องของตัวเลข</div>
+    <table class="growth-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>2023</th>
+          <th>2024</th>
+          <th>Q3 2025 (TTM)</th>
+          <th>ประเมิน</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Revenue Growth</td>
+          <td class="up">+13%</td>
+          <td class="up">+12%</td>
+          <td class="up">+14–17%</td>
+          <td class="up">✅ ACCELERATING</td>
+        </tr>
+        <tr>
+          <td>EPS Growth (Diluted)</td>
+          <td class="up">+16%</td>
+          <td class="up">+21%</td>
+          <td class="up">+19%+</td>
+          <td class="up">✅ OUTPACING REVENUE</td>
+        </tr>
+        <tr>
+          <td>Operating Margin</td>
+          <td class="neutral">~56%</td>
+          <td class="neutral">~57%</td>
+          <td class="neutral">~57–59%</td>
+          <td class="neutral">✅ STABLE/EXPANDING</td>
+        </tr>
+        <tr>
+          <td>Cross-border Volume</td>
+          <td class="up">+24%</td>
+          <td class="up">+18%</td>
+          <td class="up">+15%</td>
+          <td class="neutral">⚠️ NORMALIZING</td>
+        </tr>
+        <tr>
+          <td>Switched Transactions</td>
+          <td class="up">+11%</td>
+          <td class="up">+11%</td>
+          <td class="up">+9–10%</td>
+          <td class="neutral">✅ HEALTHY</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">✅ Growth Triangle สอดคล้องกัน — EPS โตเร็วกว่า Revenue แสดง Operating Leverage และ Buyback ที่มีประสิทธิภาพ</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">ROIC Analysis</div>
+      <div class="stat-block" style="margin-bottom:12px">
+        <div class="stat-num gold">~95%</div>
+        <div class="stat-label">ROIC (TTM)</div>
+        <div class="stat-sub">เทียบเกณฑ์ขั้นต่ำ: >15%</div>
+      </div>
+      <p style="font-size:12px; color:var(--muted); line-height:1.7">ROIC ~95% สะท้อน Asset-light Model ที่ไม่ต้องลงทุนในสินทรัพย์ถาวรมาก แต่สามารถสร้าง Return มหาศาล — สัญญาณว่า MA มี Moat ที่แท้จริง ไม่ใช่แค่ตัวเลขบนกระดาษ</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Financial Health</div>
+      <div class="val-row">
+        <div class="val-label">Net Debt / EBITDA</div>
+        <div class="val-num"><span class="badge badge-green">< 1x</span></div>
+      </div>
+      <div class="val-row">
+        <div class="val-label">Interest Coverage</div>
+        <div class="val-num">~27x <span class="badge badge-green">FORTRESS</span></div>
+      </div>
+      <div class="val-row">
+        <div class="val-label">FCF Conversion</div>
+        <div class="val-num">> 90% of Net Income <span class="badge badge-green">EXCELLENT</span></div>
+      </div>
+      <div class="val-row">
+        <div class="val-label">Working Capital</div>
+        <div class="val-num">Negative (favorable) <span class="badge badge-green">IDEAL</span></div>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:12px">Mastercard มี Working Capital เป็นลบ คือลูกค้าจ่ายก่อน (Merchant Fees) ทำให้ไม่ต้องการเงินทุนหมุนเวียน</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pricing Power & Scale — Revenue Mix Shift</div>
+    <p style="font-size:13px; line-height:1.8; margin-bottom:16px">จุดที่น่าสนใจที่สุดในงบการเงิน MA คือ <strong>Value-Added Services</strong> กำลัง Outpace Core Payment Revenue:</p>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-year" style="width:140px">Core Payment (Q3'25)</div>
+        <div class="bar-track"><div class="bar-fill gold-bar" style="width:65%"><span class="bar-val">+13% YoY</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year" style="width:140px">VAS (Q3'25)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:90%"><span class="bar-val">+25% YoY</span></div></div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px">VAS ที่โตเร็วกว่าหมายถึง Revenue Mix กำลัง Shift ไปหา Higher-Margin Services ซึ่งเป็น Structural Tailwind ที่ดีมากสำหรับ Margin ระยะยาว</p>
+  </div>
+</div>
+
+<!-- RISKS -->
+<div id="risks" class="section">
+  <div class="section-label">04 — Key Risks — 3 สิ่งที่จะทำลาย Investment Case</div>
+
+  <div class="risk-card">
+    <div class="risk-title">⚖️ RISK #1: Regulatory Intervention — Interchange Fee Caps</div>
+    <div class="risk-body">
+      รัฐบาลและ Regulator ทั่วโลก (EU, US, AU, IN) เพ่งเล็ง Interchange Fees ที่ MA/Visa เรียกเก็บว่าสูงเกินไป หาก มีการ Cap Fees เหมือนที่เกิดใน EU (0.3% สำหรับบัตรเครดิต) จะกระทบ Revenue โดยตรง ในสหรัฐฯ ความพยายาม Pass the Credit Card Competition Act ยังคงเป็นภัยคุกคามที่ต้องติดตาม
+    </div>
+    <div class="risk-verdict">PROBABILITY: MEDIUM | IMPACT: HIGH | STATUS: ยังไม่เกิดในสหรัฐฯ แต่ต้อง Monitor ทุกไตรมาส</div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-title">🔗 RISK #2: Disintermediation — A2A Payments & CBDC</div>
+    <div class="risk-body">
+      Real-time Account-to-Account Payments (PIX ในบราซิล, UPI ในอินเดีย, PromptPay ในไทย) ให้ผู้ใช้โอนเงินโดยตรงระหว่างบัญชีโดยไม่ผ่านราง MA/Visa เลย Central Bank Digital Currencies (CBDC) ก็อาจสร้างโครงสร้างพื้นฐานการชำระเงินคู่ขนานที่รัฐบาลควบคุมเอง ความเสี่ยงนี้ระยะยาวและเป็นจริงที่สุดในตลาดเกิดใหม่
+    </div>
+    <div class="risk-verdict">PROBABILITY: LOW-MEDIUM (สหรัฐฯ) / HIGH (บางตลาด EM) | IMPACT: VERY HIGH | MA กำลัง Hedge โดยลงทุนใน Open Banking</div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-title">🌍 RISK #3: Geopolitical Risk — Loss of Key Markets</div>
+    <div class="risk-body">
+      MA เคยถอนตัวจากรัสเซียใน 2022 ทันที ทำให้เห็นว่า Geopolitical Sanctions สามารถปิด Revenue Stream ขนาดใหญ่ได้ในพริบตา ความตึงเครียด US-China และ Decoupling ของระบบการเงินโลกเป็นความเสี่ยงเชิงโครงสร้างที่ไม่ควรมองข้าม นอกจากนี้ FX Risk ยังกระทบ Revenue เมื่อแปลงกลับเป็น USD (ดูได้จาก Currency-neutral Growth ที่สูงกว่า Reported เสมอ)
+    </div>
+    <div class="risk-verdict">PROBABILITY: LOW | IMPACT: HIGH | ลด Impact ด้วย Geographic Diversification ใน 200+ ประเทศ</div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">🛡️ จุดที่ทำให้ Investment Case ยังแข็งแกร่ง</div>
+    <p style="font-size:13px; line-height:1.8">
+      ความเสี่ยงทั้ง 3 ข้อเป็นสิ่งที่ตลาดรู้ดีและ Price-in ไปแล้วในระดับหนึ่ง ซึ่งเป็นเหตุผลที่ P/E ปัจจุบัน (~29x) ต่ำกว่า Historical Average (~37x) ถึง 22% หาก Regulation ไม่ได้เลวร้ายอย่างที่กลัว หรือ MA Adapt ได้สำเร็จ Upside มีนัยสำคัญ<br><br>
+      <strong>ข้อสังเกต:</strong> การที่ Value-Added Services (Security, Analytics, Cybersecurity) โตเร็วกว่า Core Network แสดงว่า MA กำลังสร้าง Revenue Stream ที่ไม่ขึ้นกับ Interchange Fees — นี่คือการ Hedge ที่ดีที่สุดต่อ Regulatory Risk
+    </p>
+  </div>
+</div>
+
+<!-- VALUATION -->
+<div id="valuation" class="section">
+  <div class="section-label">05 — Valuation & Margin of Safety</div>
+
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num">~29x</div>
+      <div class="stat-label">TTM P/E (Jun 2026)</div>
+      <div class="stat-sub">vs 5Y avg: ~37–38x</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num blue">~26x</div>
+      <div class="stat-label">Forward P/E</div>
+      <div class="stat-sub">vs 5Y avg: ~32x</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num green">1.59x</div>
+      <div class="stat-label">PEG Ratio</div>
+      <div class="stat-sub">ต่ำกว่า 2 = ยังสมเหตุ</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Valuation vs Historical Range</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-year" style="width:120px">5Y High (2020)</div>
+        <div class="bar-track"><div class="bar-fill blue-bar" style="width:100%"><span class="bar-val">55.8x P/E</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year" style="width:120px">5Y Average</div>
+        <div class="bar-track"><div class="bar-fill gold-bar" style="width:68%"><span class="bar-val">~37x P/E</span></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year" style="width:120px">ปัจจุบัน</div>
+        <div class="bar-track"><div class="bar-fill" style="width:52%"><span class="bar-val">~29x P/E</span></div></div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px">ราคาปัจจุบันซื้อขายต่ำกว่า Historical Average ~22% — บ่งชี้ว่า Market กำลัง Discount ความเสี่ยง Regulatory และ Macro Uncertainty อยู่</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Margin of Safety Framework — สิ่งที่ต้องดู</div>
+    <div class="val-row">
+      <div class="val-label">FCF Yield</div>
+      <div class="val-num">~3.8% <span class="badge badge-yellow">REASONABLE</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">EV/FCF</div>
+      <div class="val-num">~26–27x <span class="badge badge-yellow">FAIR VALUE</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">DCF Intrinsic (Simply Wall St.)</div>
+      <div class="val-num">~$1,193 (ประมาณการ) <span class="badge badge-green">DEEP DISCOUNT vs DCF</span></div>
+    </div>
+    <div class="val-row">
+      <div class="val-label">Gurufocus GF Value</div>
+      <div class="val-num">~$637 <span class="badge badge-green">MODESTLY UNDERVALUED</span></div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:16px; line-height:1.8">
+      ⚠️ <strong>คำเตือน:</strong> DCF Valuation ของ MA สูงมากเพราะ Model มักใช้ Terminal Growth Rate สูง ซึ่งอ่อนไหวมากต่อสมมติฐาน ควรให้น้ำหนักกับ Relative Valuation (P/E vs History) มากกว่า DCF สำหรับธุรกิจประเภทนี้
+    </p>
+  </div>
+
+  <div class="thesis-block">
+    <div class="thesis-heading">สรุปมุมมอง Valuation</div>
+    <div class="thesis-text">
+      ที่ ~29x TTM P/E ซึ่งต่ำกว่า 5-Year Average ~22% — MA กำลังซื้อขายในโซน "Fair to Attractive" สำหรับ Business คุณภาพสูงสุดระดับโลก ไม่ใช่ "ถูกมาก" แต่สำหรับบริษัทที่มี ROIC ~95%, Revenue Growth ~14–17%, Operating Margin ~57% และ Moat ที่ขยายตัวต่อเนื่อง — การจ่ายราคา ~29x Forward P/E ให้กับ "Toll Road บนการค้าโลก" มีความสมเหตุสมผลสูง<br><br>
+      <strong>จุดที่น่าสนใจยิ่งขึ้น:</strong> หาก P/E กลับเข้าสู่ Historical Average ที่ ~37x โดยที่ Earnings เติบโตต่อเนื่อง — Upside จากการ Re-rating อย่างเดียวอยู่ที่ ~27% บวกกับ Earnings Growth อีก ~15–18%/ปี
+    </div>
+  </div>
+</div>
+
+<!-- SCUTTLEBUTT -->
+<div id="scuttlebutt" class="section">
+  <div class="section-label">06 — Scuttlebutt & Field Research Guide</div>
+
+  <div class="card">
+    <div class="card-title">แนวทางพิสูจน์สมมติฐาน — ทำอย่างไร?</div>
+
+    <div class="scout-item">
+      <div class="scout-icon">MERCHANT</div>
+      <div class="scout-content">
+        <strong>คุยกับร้านค้า / E-commerce Operator</strong>
+        <p>ถามว่าพวกเขาจ่าย Interchange Fee เท่าไร และรู้สึกอย่างไรกับมัน? มีการพิจารณา Accept เฉพาะ QR Code / A2A แทนบัตรไหม? ประสบการณ์ Dispute & Chargeback กับ MA vs คู่แข่งเป็นอย่างไร? — ตอบ Risk #1 และ Risk #2</p>
+      </div>
+    </div>
+
+    <div class="scout-item">
+      <div class="scout-icon">BANK</div>
+      <div class="scout-content">
+        <strong>ถามผู้บริหาร Issuing Bank หรือ Card Product Manager</strong>
+        <p>ทำไมเลือก MA แทน Visa หรือ Union Pay? การต่ออายุสัญญาล่าสุดเป็นอย่างไร? MA ให้ผลประโยชน์อะไรเพิ่มเติม (Data, Fraud Tools, Co-brand deals)? — ตอบเรื่อง Switching Costs และ Pricing Power</p>
+      </div>
+    </div>
+
+    <div class="scout-item">
+      <div class="scout-icon">CONSUMER</div>
+      <div class="scout-content">
+        <strong>Survey ผู้บริโภคเรื่อง Payment Habit</strong>
+        <p>ใน 12 เดือนที่ผ่านมา คุณใช้บัตรน้อยลงและหันไปใช้ QR / Mobile Wallet มากขึ้นไหม? คุณรู้ไหมว่า Mastercard vs Visa ต่างกันอย่างไร? — ตอบว่า Brand Loyalty ยังแข็งแกร่งหรือเริ่มอ่อนตัว</p>
+      </div>
+    </div>
+
+    <div class="scout-item">
+      <div class="scout-icon">FINTECH</div>
+      <div class="scout-content">
+        <strong>วิเคราะห์ Fintech Competitors</strong>
+        <p>ดูว่า Stripe, Adyen, Razorpay ยัง "ต้องพึ่ง" MA/Visa Network อยู่ไหม หรือมีแนวโน้ม Build Direct-to-Bank? Klarna, Affirm เริ่มออกบัตร BNPL ที่ Run บน MA Network — Cannibalizer หรือ Partner? — ตอบ Disintermediation Risk</p>
+      </div>
+    </div>
+
+    <div class="scout-item">
+      <div class="scout-icon">CHANNEL</div>
+      <div class="scout-content">
+        <strong>ติดตาม Job Postings ของ MA</strong>
+        <p>MA กำลัง Hire ใน Division ไหน? AI Engineers สำหรับ Fraud? Open Banking Architects? Real-time Payment Specialists? — Job Posting Reveal Strategic Priority ที่ Management ไม่พูดตรงๆ ใน Earnings Call</p>
+      </div>
+    </div>
+
+    <div class="scout-item" style="border-bottom: none">
+      <div class="scout-icon">METRIC</div>
+      <div class="scout-content">
+        <strong>KPIs ที่ต้องติดตามทุกไตรมาส</strong>
+        <p>1) Cross-border Volume Growth (สะท้อน Travel & Global Commerce) 2) Value-Added Services Revenue Growth (สะท้อน Moat Expansion) 3) Switched Transactions Growth (สะท้อน Core Network Health) 4) Rebates & Incentives % of Revenue (สูงขึ้น = Pricing Power ลด)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="thesis-block">
+    <div class="thesis-heading">สรุป Investment Thesis — One Page</div>
+    <div class="thesis-text">
+      <strong>Bull Case:</strong> Mastercard เป็น "Toll Road บนการค้าโลก" ที่ทนทานต่อ Disruption ได้ดีกว่าที่ตลาดกลัว เนื่องจาก Network Effect ที่ฝังรากลึก 60 ปีและ Data Moat ที่ทำให้ธนาคาร-Merchant ไม่อยากเปลี่ยน Cashless Trend ทั่วโลกและ Cross-border Growth ยังเป็น Structural Tailwind อีก 10–20 ปี ขณะที่ VAS กำลัง De-risk Revenue จาก Regulation<br><br>
+      <strong>Bear Case:</strong> Regulatory Caps ใน US/EU + Rapid A2A Adoption ในตลาด EM กัดเซาะ Revenue ช้าๆ โดยที่ตลาดไม่ Notice จน Too Late นอกจากนั้น Geopolitical Fragmentation อาจทำให้ Market ที่เคยเป็น Global แตกเป็น Regional Silos<br><br>
+      <strong>คำแนะนำเชิงกระบวนการ:</strong> ที่ ~29x P/E ตอนนี้ Risk/Reward เอียงมา Favorable กว่าช่วง Peak (~55x ปี 2020) สิ่งที่ต้องระวังมากที่สุดไม่ใช่ Business Quality แต่คือ <em>ราคาที่จ่ายและ Catalyst ที่จะทำให้ P/E Expand กลับ</em>
+    </div>
+  </div>
+</div>
+
+<!-- POSITION PLAN -->
+<div id="position" class="section">
+  <div class="section-label">07 — Position Plan: Entry · Fair Value · Rebalance</div>
+
+  <!-- CURRENT SNAPSHOT -->
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num gold">$487</div>
+      <div class="stat-label">ราคาปัจจุบัน (Jun 14, 2026)</div>
+      <div class="stat-sub">52W Range: $464 – $602</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">28.2x</div>
+      <div class="stat-label">TTM P/E (Adj. EPS ~$17.27)</div>
+      <div class="stat-sub">5Y avg: ~37–38x</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num blue">$647</div>
+      <div class="stat-label">Consensus 12M Target</div>
+      <div class="stat-sub">39 นักวิเคราะห์ — Strong Buy</div>
+    </div>
+  </div>
+
+  <!-- FAIR VALUE FRAMEWORK -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🎯 Fair Value — ใช้ Metrics อะไรวัด และได้ค่าเท่าไหร่?</div>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:20px; line-height:1.7">
+      สำหรับธุรกิจ Quality Compounder อย่าง MA ไม่ใช้ DCF เป็นตัวหลัก เนื่องจาก Terminal Value Sensitive มากเกินไป ใช้ <strong>3 Anchor Metrics</strong> แล้ว Triangulate หาช่วง Fair Value:
+    </p>
+
+    <table class="growth-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>ตัวเลขฐาน</th>
+          <th>Multiple ที่ใช้</th>
+          <th>Fair Value ที่ได้</th>
+          <th>น้ำหนัก</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① P/E — Historical Mean Reversion</strong></td>
+          <td class="neutral">FY2026E EPS ~$19.3</td>
+          <td class="neutral">33x (Discount 5Y avg 12%)</td>
+          <td class="up">~$637</td>
+          <td class="neutral">35%</td>
+        </tr>
+        <tr>
+          <td><strong>② EV/FCF — Earnings Power</strong></td>
+          <td class="neutral">FCF TTM ~$15.5B</td>
+          <td class="neutral">28–32x (Quality FCF Premium)</td>
+          <td class="up">$580–660</td>
+          <td class="neutral">40%</td>
+        </tr>
+        <tr>
+          <td><strong>③ PEG Ratio — Growth Adjusted</strong></td>
+          <td class="neutral">EPS Growth ~14–15%/y</td>
+          <td class="neutral">PEG = 2.0x (Fair for Wide Moat)</td>
+          <td class="up">~$580–620</td>
+          <td class="neutral">25%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:20px; padding:20px; background:var(--card2); border-radius:4px; border-left:3px solid var(--gold)">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--gold); letter-spacing:0.15em; margin-bottom:10px">WEIGHTED FAIR VALUE RANGE</div>
+      <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:52px; color:#fff; line-height:1">$580 – $650</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px">Conservative → Base Case Fair Value</div>
+        </div>
+        <div style="flex:1; min-width:200px">
+          <div style="font-size:13px; line-height:1.8; color:var(--text)">
+            ราคาปัจจุบัน <strong style="color:var(--gold)">$487</strong> อยู่ต่ำกว่า Conservative Fair Value ~16% และต่ำกว่า Base Case ~25–33%<br>
+            → <strong style="color:var(--green)">Margin of Safety มีอยู่จริง</strong> ที่ราคานี้
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; padding:16px; background:#0f1a0f; border-radius:4px; border:1px solid #1e3d1e">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--green); letter-spacing:0.12em; margin-bottom:8px">WHY NOT DCF AS PRIMARY?</div>
+      <p style="font-size:12px; color:var(--muted); line-height:1.7">DCF ของ MA มีความอ่อนไหวสูงมาก — เปลี่ยน Terminal Growth จาก 4% → 3% ทำให้ Intrinsic Value หล่นกว่า 30% ทันที สำหรับ Business ที่ Predictable แบบนี้ Relative Valuation vs. Own History และ Earnings Power เป็น Anchor ที่เชื่อถือได้กว่า</p>
+    </div>
+  </div>
+
+  <!-- ENTRY FRAMEWORK -->
+  <div class="card">
+    <div class="card-title">📥 Entry Framework — ควรซื้อด้วยเหตุผลอะไร?</div>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:16px">ไม่ซื้อเพราะ "ราคาลง" แต่ซื้อเมื่อ <strong style="color:var(--text)">เงื่อนไขเชิงคุณภาพ + Valuation พร้อมกัน</strong></p>
+
+    <div style="display:flex; flex-direction:column; gap:0">
+
+      <div style="border:1px solid var(--border); border-radius:4px; overflow:hidden; margin-bottom:12px">
+        <div style="background:#0f1a0f; padding:12px 16px; display:flex; justify-content:space-between; align-items:center">
+          <div style="font-family:var(--mono); font-size:11px; color:var(--green); letter-spacing:0.1em">ENTRY TRIGGER #1 — VALUATION DISCOUNT</div>
+          <div style="background:var(--green); color:#000; font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:2px; font-weight:600">ปัจจุบันเข้าเงื่อนไข</div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px; font-weight:600; margin-bottom:8px">Forward P/E ต่ำกว่า 30x</div>
+          <p style="font-size:12px; color:var(--muted); line-height:1.7">ที่ FY2026E EPS ~$19.28 และราคา $487 — Forward P/E อยู่ที่ ~25.3x ซึ่งต่ำกว่า Historical Fair Value Range (~32–37x) อย่างมีนัยสำคัญ เหตุการณ์นี้เกิดขึ้นน้อยมากในรอบ 10 ปี (เกิดเพียง 2-3 ครั้ง: COVID Crash 2020, Rate Shock 2022, ปัจจุบัน 2026)</p>
+          <div style="margin-top:10px; font-family:var(--mono); font-size:10px; color:var(--muted)">METRIC: Forward P/E | THRESHOLD: &lt; 30x | STATUS: ✅ ~25.3x ปัจจุบัน</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:4px; overflow:hidden; margin-bottom:12px">
+        <div style="background:#0f1a0f; padding:12px 16px; display:flex; justify-content:space-between; align-items:center">
+          <div style="font-family:var(--mono); font-size:11px; color:var(--green); letter-spacing:0.1em">ENTRY TRIGGER #2 — EARNINGS MOMENTUM INTACT</div>
+          <div style="background:var(--green); color:#000; font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:2px; font-weight:600">ปัจจุบันเข้าเงื่อนไข</div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px; font-weight:600; margin-bottom:8px">Revenue Growth (Currency-Neutral) ยังสูงกว่า 10% และ Beat Estimates ต่อเนื่อง</div>
+          <p style="font-size:12px; color:var(--muted); line-height:1.7">Q1 2026 Revenue +16% YoY (Adj. EPS $4.60 Beat $4.41) — แปลว่า Business ยังแข็งแกร่ง ที่ราคาตก เป็นเพราะตลาด Over-react กับความเสี่ยงระยะสั้น ไม่ใช่เพราะ Fundamentals เสียหาย</p>
+          <div style="margin-top:10px; font-family:var(--mono); font-size:10px; color:var(--muted)">METRIC: Revenue Growth YoY | THRESHOLD: &gt;10% CN | STATUS: ✅ +12% CN ใน Q1 2026</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:4px; overflow:hidden; margin-bottom:12px">
+        <div style="background:#0f1a0f; padding:12px 16px; display:flex; justify-content:space-between; align-items:center">
+          <div style="font-family:var(--mono); font-size:11px; color:var(--green); letter-spacing:0.1em">ENTRY TRIGGER #3 — CATALYST / SENTIMENT RESET</div>
+          <div style="background:#2a1e00; color:var(--gold); font-family:var(--mono); font-size:9px; padding:3px 8px; border-radius:2px; font-weight:600">Monitor</div>
+        </div>
+        <div style="padding:16px">
+          <div style="font-size:13px; font-weight:600; margin-bottom:8px">Berkshire Exit / Regulatory Uncertainty = ราคาถูก Sell โดยไม่มีเหตุผลเชิง Fundamental</div>
+          <p style="font-size:12px; color:var(--muted); line-height:1.7">ราคาตกจาก $602 สู่ $464 ส่วนหนึ่งเกิดจาก Berkshire ลด Stake + ความกังวล Cuba Transaction Suspension + Agentic Commerce Narrative ปัจจัยเหล่านี้ไม่ใช่ Structural Damage แต่สร้าง Entry Window สำหรับ Long-term Investor</p>
+          <div style="margin-top:10px; font-family:var(--mono); font-size:10px; color:var(--muted)">STRATEGY: ราคาตกจาก Fear ≠ Fundamentals เสีย → Buy in tranches ไม่ใช่ All-in</div>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--border); border-radius:4px; overflow:hidden">
+        <div style="background:#1a0f0f; padding:12px 16px">
+          <div style="font-family:var(--mono); font-size:11px; color:var(--red); letter-spacing:0.1em">❌ เหตุผลที่ไม่ควรซื้อ (ณ ปัจจุบัน)</div>
+        </div>
+        <div style="padding:16px">
+          <p style="font-size:12px; color:var(--muted); line-height:1.8">
+            • <strong>ซื้อเพราะราคาลงจาก $600 แล้วอยาก "คืนทุน"</strong> — ตลาดไม่รู้ว่าคุณเคยถือที่ราคาไหน<br>
+            • <strong>ซื้อโดยไม่รู้ว่า Credit Card Competition Act อยู่ที่ไหนในกระบวนการ立法</strong> — ถ้าผ่าน ราคาอาจร่วงอีก 15–25%<br>
+            • <strong>ซื้อทั้งหมดในครั้งเดียว</strong> — เนื่องจาก Downside Catalyst ยังมีอยู่ ควร Scale In เป็น 3 Tranche
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTRY PLAN -->
+  <div class="card">
+    <div class="card-title">📋 Suggested Entry Plan — 3 Tranche Strategy</div>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:16px">สมมติว่า Position Size รวม = 100% | แบ่งซื้อ 3 รอบตาม Price Zone</p>
+    <table class="growth-table">
+      <thead>
+        <tr>
+          <th>Tranche</th>
+          <th>ราคาเป้า</th>
+          <th>สัดส่วน</th>
+          <th>เหตุผล</th>
+          <th>Forward P/E</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tranche 1 — Now</strong></td>
+          <td class="neutral">$460–$490</td>
+          <td class="up">40%</td>
+          <td style="font-size:11px; color:var(--muted)">Valuation ต่ำกว่า Fair Value ชัดเจน, Momentum เริ่ม Stabilize</td>
+          <td class="neutral">~24–25x</td>
+        </tr>
+        <tr>
+          <td><strong>Tranche 2 — Dip</strong></td>
+          <td class="neutral">$430–$460</td>
+          <td class="up">35%</td>
+          <td style="font-size:11px; color:var(--muted)">หากราคาหล่น หลัง Earnings Miss หรือ Regulation News ชั่วคราว</td>
+          <td class="neutral">~22–24x</td>
+        </tr>
+        <tr>
+          <td><strong>Tranche 3 — Confirmation</strong></td>
+          <td class="neutral">$490–$530</td>
+          <td class="up">25%</td>
+          <td style="font-size:11px; color:var(--muted)">หาก Q2 2026 Earnings ยืนยัน Growth Thesis และราคาเริ่มฟื้น — Momentum Entry</td>
+          <td class="neutral">~25–27x</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">⏱️ Tranche 3 ควรรอผล Q2 2026 Earnings (กำหนดรายงาน <strong style="color:var(--gold)">23 กรกฎาคม 2026</strong>)</p>
+  </div>
+
+  <!-- REBALANCE / EXIT -->
+  <div class="card">
+    <div class="card-title">📤 Rebalance & Exit Framework — ออกด้วยเหตุผลอะไร?</div>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.7">แยกให้ชัดระหว่าง <strong style="color:var(--text)">Rebalance (ลด % Position)</strong> กับ <strong style="color:var(--red)">Exit ทั้งหมด (Thesis Broken)</strong></p>
+
+    <div style="margin-bottom:20px">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--gold); letter-spacing:0.15em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border)">A. REBALANCE — ลด Position บางส่วน (ไม่ใช่ Exit)</div>
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--gold)">
+          <div style="font-size:13px; font-weight:600; color:var(--gold); margin-bottom:4px">📈 Valuation Stretch — Forward P/E เกิน 40x</div>
+          <p style="font-size:12px; color:var(--muted)">หาก MA Re-rate กลับเกิน 40x Forward P/E โดยที่ Growth ไม่ได้เร่งขึ้น (เช่น ราคา $770+ บน EPS ~$19.3) — ลด 20–30% Position เพราะ Upside Asymmetry หายไป ไม่ใช่เพราะ Business แย่</p>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:8px">METRIC: Forward P/E | TRIGGER: &gt;40x | ACTION: Trim 20–30%</div>
+        </div>
+
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--gold)">
+          <div style="font-size:13px; font-weight:600; color:var(--gold); margin-bottom:4px">⚖️ Portfolio Concentration เกิน 10% ของ Portfolio</div>
+          <p style="font-size:12px; color:var(--muted)">เมื่อ MA โตจนเกิน 10% ของ Total Portfolio (Passive Rebalance) — ลด Mechanically โดยไม่ต้องตัดสิน Thesis ให้ทำเป็น System ไม่ใช่ Emotion</p>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:8px">METRIC: Portfolio Weight | TRIGGER: &gt;10% | ACTION: Trim to 7–8%</div>
+        </div>
+
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--gold)">
+          <div style="font-size:13px; font-weight:600; color:var(--gold); margin-bottom:4px">🔄 Better Opportunity Appears</div>
+          <p style="font-size:12px; color:var(--muted)">พบ Business คุณภาพเทียบเท่าหรือสูงกว่า ซื้อขายที่ Discount ใหญ่กว่า MA ชัดเจน — ลด MA บางส่วนเพื่อโยกเงินทุน (Opportunity Cost Discipline)</p>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:8px">CONDITION: Better Risk/Reward Ratio vs. Current MA Valuation</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:var(--mono); font-size:10px; color:var(--red); letter-spacing:0.15em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border)">B. FULL EXIT — Thesis Broken (ขายทิ้งทั้งหมด)</div>
+
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 Revenue Growth ชะลอต่ำกว่า 8% YoY ต่อเนื่อง 2 ไตรมาส</div>
+          <div class="risk-body">แสดงว่า Network Effect เริ่มอ่อนแรง หรือ A2A/Alternative Payment กำลัง Take Share จริงๆ — ไม่ใช่แค่ Macro ชั่วคราว</div>
+          <div class="risk-verdict">WATCH: Switched Transactions + Cross-border Volume + VAS Growth รายไตรมาส</div>
+        </div>
+
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 Regulatory Cap ผ่านกฎหมายในสหรัฐฯ (เช่น Credit Card Competition Act)</div>
+          <div class="risk-body">หากกฎหมายบังคับให้ Merchant เลือก Network แข่งขันได้อย่างอิสระ จะทำลาย Switching Cost และ Pricing Power โดยตรง — ต้อง Revalue Business ใหม่ทั้งหมด</div>
+          <div class="risk-verdict">WATCH: Legislative Progress ทุกไตรมาส + MA Management Commentary ใน Earnings Call</div>
+        </div>
+
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 FCF Margin หดตัวอย่างถาวรต่ำกว่า 35%</div>
+          <div class="risk-body">Operating Margin ลดจากปัจจุบัน ~57% สู่ต่ำกว่า 45% โดยไม่ใช่เหตุการณ์ One-time — แสดงว่า Cost Structure เปลี่ยนไป หรือ Competitive Intensity สูงขึ้นจนกดราคา</div>
+          <div class="risk-verdict">WATCH: Operating Margin Trend + SG&A % of Revenue ทุก Annual Report</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONITORING DASHBOARD -->
+  <div class="card">
+    <div class="card-title">📡 KPI Monitoring Dashboard — ดู 5 ตัวเลขนี้ทุกไตรมาส</div>
+    <table class="growth-table">
+      <thead>
+        <tr>
+          <th>KPI</th>
+          <th>เขียวสด (Buy More)</th>
+          <th>เหลือง (Hold/Watch)</th>
+          <th>แดง (Review Thesis)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Revenue Growth (CN)</strong></td>
+          <td class="up">&gt;12%</td>
+          <td class="neutral">8–12%</td>
+          <td class="down">&lt;8%</td>
+        </tr>
+        <tr>
+          <td><strong>VAS Revenue Growth</strong></td>
+          <td class="up">&gt;18%</td>
+          <td class="neutral">12–18%</td>
+          <td class="down">&lt;10%</td>
+        </tr>
+        <tr>
+          <td><strong>Operating Margin</strong></td>
+          <td class="up">&gt;56%</td>
+          <td class="neutral">50–56%</td>
+          <td class="down">&lt;45%</td>
+        </tr>
+        <tr>
+          <td><strong>Cross-border Volume (CN)</strong></td>
+          <td class="up">&gt;12%</td>
+          <td class="neutral">5–12%</td>
+          <td class="down">&lt;3%</td>
+        </tr>
+        <tr>
+          <td><strong>Forward P/E</strong></td>
+          <td class="up">&lt;27x</td>
+          <td class="neutral">27–38x</td>
+          <td class="down">&gt;42x (too expensive)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">📅 Earnings Calendar: Q2 2026 — <strong style="color:var(--gold)">23 กรกฎาคม 2026</strong> | Q3 2026 — ประมาณ ต.ค. 2026</p>
+  </div>
+
+  <div class="thesis-block">
+    <div class="thesis-heading">สรุป Position Discipline</div>
+    <div class="thesis-text">
+      ณ ราคา $487 — MA ซื้อขายที่ Forward P/E ~25x ซึ่งต่ำที่สุดในรอบ 5+ ปี โดยที่ Business ยังโตเร็ว (+16% Revenue, +22% VAS ใน Q1 2026) เหตุผลที่ราคาตก (Berkshire Exit, Cuba Suspension, Agentic AI Fear) เป็น <strong>Sentiment Risk ชั่วคราว</strong> ไม่ใช่ Structural Damage<br><br>
+      <strong>กรอบ Position ที่แนะนำ:</strong> เข้า 40% ตอนนี้ (Trigger #1 + #2 เข้าเงื่อนไข) → ถือรอ Q2 Earnings 23 ก.ค. → หาก Confirm Growth ทยอยเพิ่มอีก 25% → Rebalance เมื่อ P/E เกิน 40x หรือ Weight เกิน 10% Portfolio<br><br>
+      <strong>Stop-Loss ทาง Thesis (ไม่ใช่ราคา):</strong> ไม่ตั้ง Price Stop-Loss สำหรับ Quality Business — แต่ใช้ Thesis Stop คือถ้า Revenue Growth ต่ำกว่า 8% CN ต่อเนื่อง 2 ไตรมาส หรือ Regulatory Cap ผ่านกฎหมายสหรัฐฯ — ทบทวน Full Exit ทันที
+    </div>
+  </div>
+</div>
+
+<footer>
+  รายงานนี้จัดทำโดย AI Investment Analyst เพื่อการศึกษาและวิเคราะห์เชิงกรอบความคิดเท่านั้น ไม่ใช่คำแนะนำในการลงทุน ข้อมูลอ้างอิงจาก SEC Filings ของ Mastercard (8-K, 10-Q, 10-K) และแหล่งข้อมูลสาธารณะ ณ มิถุนายน 2569 | ผู้ลงทุนควรทำการศึกษาด้วยตนเองก่อนตัดสินใจ
+</footer>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

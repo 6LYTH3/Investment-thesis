@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STX — Seagate Investment Thesis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Bebas+Neue&display=swap');
+
+  :root {
+    --black: #080c10;
+    --card: #0e1318;
+    --card2: #121820;
+    --border: #1e2830;
+    --cyan: #00C8FF;
+    --cyan-dim: #006080;
+    --amber: #F5A623;
+    --red: #E05252;
+    --green: #4CAF7D;
+    --purple: #9B7FFF;
+    --text: #DDE8F0;
+    --muted: #6a8090;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans Thai', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--black); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; padding-bottom: 80px; }
+
+  /* HERO */
+  .hero {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 36px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+  }
+  .eyebrow { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 12px; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 80px; letter-spacing: 0.06em; line-height: 0.9; color: #fff; }
+  .hero-title span { color: var(--cyan); }
+  .hero-sub { font-size: 14px; color: var(--muted); margin-top: 12px; font-weight: 300; }
+
+  .verdict {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .verdict-badge {
+    background: var(--cyan);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    padding: 6px 14px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .verdict-badge.warn { background: var(--amber); }
+  .verdict-badge.danger { background: var(--red); color: #fff; }
+
+  /* NAV */
+  .nav-wrap { border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--black); z-index: 100; }
+  .nav { display: flex; max-width: 960px; margin: 0 auto; padding: 0 40px; overflow-x: auto; }
+  .nav button { background: none; border: none; color: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px 18px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .nav button.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+  .nav button:hover:not(.active) { color: var(--text); }
+
+  /* SECTIONS */
+  .section { display: none; max-width: 960px; margin: 0 auto; padding: 40px 40px 0; }
+  .section.active { display: block; }
+  .section-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+  /* CARDS */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 24px; margin-bottom: 16px; }
+  .card-title { font-family: var(--mono); font-size: 11px; color: var(--cyan); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* STAT */
+  .stat-block { background: var(--card2); border: 1px solid var(--border); border-radius: 4px; padding: 20px; text-align: center; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: #fff; line-height: 1; letter-spacing: 0.04em; }
+  .stat-num.cyan { color: var(--cyan); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-num.red { color: var(--red); }
+  .stat-num.purple { color: var(--purple); }
+  .stat-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; }
+  .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { text-align: right; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .data-table th:first-child { text-align: left; }
+  .data-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid #121820; }
+  .data-table td:first-child { text-align: left; color: var(--muted); }
+  .up { color: var(--green); } .dn { color: var(--red); } .neu { color: var(--amber); }
+
+  /* VAL ROW */
+  .val-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .val-label { font-size: 13px; color: var(--muted); }
+  .val-num { font-family: var(--mono); font-size: 14px; }
+  .badge { display: inline-block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; padding: 3px 8px; border-radius: 2px; margin-left: 8px; }
+  .bg { background: #0a2030; color: var(--cyan); }
+  .gg { background: #0f2a1a; color: var(--green); }
+  .aa { background: #2a1e00; color: var(--amber); }
+  .rr { background: #2a1010; color: var(--red); }
+  .pp { background: #1a1430; color: var(--purple); }
+
+  /* RISK */
+  .risk-card { border-left: 3px solid var(--red); background: var(--card); border-radius: 0 4px 4px 0; padding: 20px 20px 20px 24px; margin-bottom: 14px; }
+  .risk-title { font-weight: 600; color: var(--red); margin-bottom: 6px; font-size: 14px; }
+  .risk-body { color: var(--text); font-size: 13px; line-height: 1.7; }
+  .risk-verdict { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 8px; }
+
+  /* BAR */
+  .bar-chart { margin-top: 12px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .bar-yr { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 60px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--border); border-radius: 2px; height: 20px; }
+  .bar-fill { height: 20px; border-radius: 2px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  .bar-fill.cy { background: linear-gradient(90deg, #002030, var(--cyan)); }
+  .bar-fill.gn { background: linear-gradient(90deg, #0a2015, var(--green)); }
+  .bar-fill.am { background: linear-gradient(90deg, #201000, var(--amber)); }
+  .bar-val { font-family: var(--mono); font-size: 10px; font-weight: 600; color: #fff; white-space: nowrap; }
+
+  /* THESIS BLOCK */
+  .thesis-block { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 28px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .thesis-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--cyan); }
+  .thesis-block.warn::before { background: var(--amber); }
+  .thesis-heading { font-family: var(--mono); font-size: 10px; color: var(--cyan); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 14px; }
+  .thesis-heading.warn { color: var(--amber); }
+  .thesis-text { font-size: 14px; line-height: 1.8; color: var(--text); }
+
+  /* MOAT */
+  .moat-item { margin-bottom: 20px; }
+  .moat-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .moat-name { font-weight: 500; font-size: 13px; }
+  .moat-score { font-family: var(--mono); font-size: 12px; color: var(--cyan); }
+  .moat-bar-bg { background: var(--border); border-radius: 2px; height: 6px; }
+  .moat-bar-fill { height: 6px; border-radius: 2px; background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); }
+  .moat-desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+  /* ENTRY CARD */
+  .entry-card { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+  .entry-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .entry-header.green { background: #0a1f14; }
+  .entry-header.amber { background: #1a1200; }
+  .entry-header.red { background: #1a0a0a; }
+  .entry-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; }
+  .entry-label.green { color: var(--green); }
+  .entry-label.amber { color: var(--amber); }
+  .entry-label.red { color: var(--red); }
+  .entry-body { padding: 16px; }
+  .entry-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .entry-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .entry-metric { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 8px; }
+
+  /* WARNING BOX */
+  .warn-box { background: #150d00; border: 1px solid #3d2800; border-radius: 4px; padding: 20px; margin-bottom: 16px; }
+  .warn-title { font-family: var(--mono); font-size: 11px; color: var(--amber); letter-spacing: 0.1em; margin-bottom: 10px; }
+
+  footer { max-width: 960px; margin: 48px auto 0; padding: 24px 40px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; line-height: 1.8; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 28px 20px 24px; grid-template-columns: 1fr; }
+    .hero-title { font-size: 56px; }
+    .section { padding: 28px 20px 0; }
+    .nav { padding: 0 16px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <div class="eyebrow">AI Investment Analyst — Deep Dive Report</div>
+    <div class="hero-title">SEA<span>GATE</span></div>
+    <div class="hero-sub">NASDAQ: STX &nbsp;·&nbsp; Mass Capacity Storage / HDD &nbsp;·&nbsp; วิเคราะห์ ณ มิถุนายน 2569</div>
+  </div>
+  <div class="verdict">
+    <div class="verdict-badge">CYCLICAL GROWTH PLAY</div>
+    <div class="verdict-badge warn">HIGH VALUATION RISK</div>
+    <div class="verdict-badge danger">NOT QUALITY COMPOUNDER</div>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="active" onclick="show('exec')">Executive Summary</button>
+    <button onclick="show('moat')">Moat Analysis</button>
+    <button onclick="show('financials')">Financials</button>
+    <button onclick="show('risks')">Key Risks</button>
+    <button onclick="show('valuation')">Valuation</button>
+    <button onclick="show('position')">📌 Position Plan</button>
+  </div>
+</div>
+
+<!-- EXEC -->
+<div id="exec" class="section active">
+  <div class="section-label">01 — Executive Summary</div>
+
+  <div class="warn-box">
+    <div class="warn-title">⚠️ คำเตือนเบื้องต้น — STX ไม่ใช่ MA</div>
+    <p style="font-size:13px; line-height:1.8; color:var(--text)">
+      Seagate เป็น <strong>Cyclical Technology Company</strong> ไม่ใช่ Wide Moat Compounder แบบ Mastercard — Business ของมันผูกกับวัฏจักร HDD Supply/Demand อย่างแยกไม่ออก และขณะนี้กำลังอยู่ใน <strong>Peak of an AI Supercycle</strong> ที่ราคาหุ้นวิ่งขึ้น ~600%+ ในช่วง 2 ปี กรอบการวิเคราะห์สำหรับ STX ต้องต่างออกไปจาก MA อย่างสิ้นเชิง
+    </p>
+  </div>
+
+  <div class="thesis-block">
+    <div class="thesis-heading">ธุรกิจนี้ทำอะไร</div>
+    <div class="thesis-text">
+      Seagate คือผู้ผลิต <strong>Hard Disk Drive (HDD) รายใหญ่ที่สุดในโลก</strong> โดยเฉพาะ Nearline HDD สำหรับ Data Center ที่ปัจจุบันคิดเป็น ~80% ของรายได้ทั้งหมด บริษัทออกแบบ ผลิต และขาย Mass Capacity Storage ให้กับ Hyperscaler อย่าง AWS, Azure, Google รวมถึง Enterprise Cloud และ Consumer ผ่านแบรนด์ Seagate, LaCie<br><br>
+      เทคโนโลยีสำคัญล่าสุดคือ <strong>Mozaic HAMR (Heat-Assisted Magnetic Recording)</strong> ที่ใช้ Laser ช่วยในการเขียนข้อมูล ทำให้ความหนาแน่น Areal Density สูงขึ้น 10x เทียบกับ Conventional HDD — ทำให้ Data Center ได้จำนวน Exabyte มากขึ้นต่อ Drive โดยใช้พื้นที่และพลังงานน้อยลง<br><br>
+      ใน Q3 FY2026 (ไตรมาสล่าสุด) Seagate ทำรายได้ <strong>$3.11B (+44% YoY)</strong> FCF สูงสุดในรอบ 10 ปีที่ <strong>$953M</strong> และ Gross Margin ขยายไปที่ <strong>47%</strong>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num cyan">+44%</div>
+      <div class="stat-label">Revenue Growth Q3 FY26</div>
+      <div class="stat-sub">Data Center +55% YoY</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num green">47%</div>
+      <div class="stat-label">Gross Margin (Non-GAAP)</div>
+      <div class="stat-sub">+1,080 bps จากปีก่อน</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num amber">~97x</div>
+      <div class="stat-label">TTM P/E</div>
+      <div class="stat-sub">5Y avg: ~9x — สูงกว่า 10 เท่า</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Investment Snapshot — STX vs MA เปรียบเทียบ</div>
+    <div class="val-row"><div class="val-label">ประเภทธุรกิจ</div><div class="val-num">Cyclical Tech — HDD Supercycle <span class="badge aa">DIFFERENT ANIMAL</span></div></div>
+    <div class="val-row"><div class="val-label">คุณภาพ Moat</div><div class="val-num">Technology Lead — Fragile <span class="badge aa">NARROW-TECH MOAT</span></div></div>
+    <div class="val-row"><div class="val-label">Margin Expansion</div><div class="val-num">Spectacular แต่ Peak-Dependent <span class="badge aa">MONITOR CLOSELY</span></div></div>
+    <div class="val-row"><div class="val-label">ความเสี่ยงหลัก</div><div class="val-num">Cyclicality + Valuation + Debt <span class="badge rr">HIGH RISK</span></div></div>
+    <div class="val-row"><div class="val-label">Valuation (Jun 2026)</div><div class="val-num">~97x P/E — 416% vs. 10Y avg <span class="badge rr">EXPENSIVE</span></div></div>
+    <div class="val-row"><div class="val-label">Analyst Target (Consensus)</div><div class="val-num">$898 (ต่ำกว่าราคาปัจจุบัน $941) <span class="badge rr">DOWNGRADE RISK</span></div></div>
+  </div>
+</div>
+
+<!-- MOAT -->
+<div id="moat" class="section">
+  <div class="section-label">02 — Moat Analysis — เบาบางกว่า MA มาก</div>
+
+  <div class="card">
+    <div class="card-title">คูเมืองของ Seagate — ประเมินตรงไปตรงมา</div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🔬 Technology Lead — Mozaic HAMR</div>
+        <div class="moat-score">7.0 / 10 — TEMPORARY LEAD</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:70%"></div></div>
+      <div class="moat-desc">Seagate เป็นผู้นำ HAMR เชิงพาณิชย์ที่ Qualify กับ Hyperscaler รายใหญ่ 5 รายแล้ว ก่อน Western Digital ~1–2 ปี ข้อได้เปรียบเชิงเวลานี้มีค่ามาก แต่ไม่ใช่ Perpetual — WDC จะ Qualify HAMR ใน 2027 และ Toshiba มีแผน HAMR ของตัวเอง เมื่อเทคโนโลยี Commoditize การแข่งขันจะกลับไปที่ Price และ Scale</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🏭 Manufacturing Scale & Vertical Integration</div>
+        <div class="moat-score">7.5 / 10 — DURABLE</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:75%"></div></div>
+      <div class="moat-desc">Seagate ผลิต HDD Component ส่วนใหญ่เอง (Media, Heads, Firmware) ทำให้ควบคุม Cost และ Quality ได้ดีกว่า ประสบการณ์ Manufacturing 47 ปีสร้าง Process Know-how ที่คู่แข่งรายใหม่ Replicate ไม่ได้ง่ายๆ นี่คือ Cost Advantage ที่จริงและยั่งยืนกว่า Technology Lead</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🤝 Customer Stickiness — Hyperscaler Qualification</div>
+        <div class="moat-score">6.5 / 10 — MEDIUM</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:65%"></div></div>
+      <div class="moat-desc">การ Qualify HDD ใหม่ในระบบ Data Center ใช้เวลา 12–18 เดือน ทำให้ลูกค้ามีต้นทุน Switching สูง — แต่ไม่ใช่ Lock-in แบบ Software Hyperscaler ระดับใหญ่ Dual-Source เสมอ (ใช้ทั้ง Seagate และ WDC) จึงมีอำนาจต่อรองสูงมาก</div>
+    </div>
+
+    <div class="moat-item">
+      <div class="moat-header">
+        <div class="moat-name">🌐 Oligopoly Market Structure</div>
+        <div class="moat-score">8.0 / 10 — STRUCTURAL</div>
+      </div>
+      <div class="moat-bar-bg"><div class="moat-bar-fill" style="width:80%"></div></div>
+      <div class="moat-desc">HDD Mass Capacity เป็น Effective Duopoly: Seagate (~40% share) + Western Digital (~55% share) = ~95% ตลาดทั่วโลก Toshiba อยู่ในส่วน Consumer/SMB ไม่ได้แข่งใน Nearline โดยตรง โครงสร้างนี้ทำให้ Pricing Environment ดีกว่าที่ควรจะเป็น แต่ก็หมายความว่า WDC เป็นตัวแปรสำคัญของ Pricing ตลอดเวลา</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Moat vs MA — ความต่างที่ต้องเข้าใจ</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Dimension</th><th>Mastercard (MA)</th><th>Seagate (STX)</th><th>ใครดีกว่า</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Moat Type</td><td class="up">Network Effect + Switching Cost</td><td class="neu">Tech Lead + Scale</td><td class="up">MA</td></tr>
+        <tr><td>Moat Durability</td><td class="up">60+ ปี มีข้อพิสูจน์</td><td class="neu">HAMR Lead ~2–3 ปี</td><td class="up">MA</td></tr>
+        <tr><td>Cyclicality</td><td class="up">Non-Cyclical (ทุก Transaction)</td><td class="dn">High Cyclical (HDD Supercycle)</td><td class="up">MA</td></tr>
+        <tr><td>Pricing Power</td><td class="up">Strong — ขึ้นราคาได้</td><td class="neu">Moderate — Oligopoly Protected</td><td class="up">MA</td></tr>
+        <tr><td>Tech Disruption Risk</td><td class="neu">Medium (A2A, CBDC)</td><td class="dn">High (SSD, Future Storage)</td><td class="up">MA</td></tr>
+        <tr><td>ROIC</td><td class="up">~95% (Asset-light)</td><td class="neu">~15–25% (Asset-heavy)</td><td class="up">MA</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.7">ข้อสรุป: Moat ของ STX แข็งพอในช่วงที่ Demand แข็ง แต่ในช่วง Downcycle มัน "กลืน" ความได้เปรียบทั้งหมดและกลายเป็น Price War — ในปี 2023 Gross Margin STX เคยอยู่ที่ 17% (เทียบ 47% ตอนนี้) แสดงให้เห็นว่า Moat ไม่ได้กันไม่ให้ Margin หดหาย</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Management & Capital Allocation</div>
+    <div class="val-row"><div class="val-label">CEO Dave Mosley</div><div class="val-num">Execution ดีใน Upcycle <span class="badge aa">COMPETENT</span></div></div>
+    <div class="val-row"><div class="val-label">Debt Level (FY2026)</div><div class="val-num">~$5B Net Debt — กำลัง Deleverage <span class="badge aa">WATCH</span></div></div>
+    <div class="val-row"><div class="val-label">CEO Insider Sales (Mar 2026)</div><div class="val-num">23 ธุรกรรมขายในวันเดียว <span class="badge rr">RED FLAG</span></div></div>
+    <div class="val-row"><div class="val-label">Dividend</div><div class="val-num">$0.74/Q (~0.3% yield) <span class="badge bg">MAINTAINED</span></div></div>
+    <p style="font-size:12px; color:var(--muted); margin-top:14px; line-height:1.7">⚠️ Insider Selling ขนาดใหญ่ใน March 2026 ขณะราคาพีค เป็น Signal ที่ต้องชั่งน้ำหนัก แม้จะไม่ได้ชี้ขาดว่า Thesis พัง แต่ผู้บริหารที่รู้ข้อมูลภายในกำลัง De-risk ตัวเองออก</p>
+  </div>
+</div>
+
+<!-- FINANCIALS -->
+<div id="financials" class="section">
+  <div class="section-label">03 — Financial Analysis — Spectacular แต่ Cyclical</div>
+
+  <div class="warn-box">
+    <div class="warn-title">📊 การอ่านงบ STX ต้องใช้กรอบ "Through the Cycle"</div>
+    <p style="font-size:13px; line-height:1.8; color:var(--text)">ตัวเลขปัจจุบันดูสวยงามมาก — แต่ต้องถามว่า <strong>"Margin นี้ยั่งยืนได้แค่ไหน?"</strong> ดู Gross Margin ในปี 2023 (Trough): 17% vs ปัจจุบัน (Peak): 47% = Swing ขนาด 30 percentage points ในเวลา 3 ปี นี่คือ Cyclical Business ไม่ใช่ Compounder</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Revenue Growth — วัฏจักรที่ชัดเจน</div>
+    <div class="bar-chart">
+      <div class="bar-row"><div class="bar-yr">FY23</div><div class="bar-track"><div class="bar-fill am" style="width:22%"><span class="bar-val">-34% YoY</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr">FY24</div><div class="bar-track"><div class="bar-fill gn" style="width:30%"><span class="bar-val">+16% YoY</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr">Q1 FY25</div><div class="bar-track"><div class="bar-fill gn" style="width:42%"><span class="bar-val">+49% YoY</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr">Q2 FY25</div><div class="bar-track"><div class="bar-fill gn" style="width:50%"><span class="bar-val">+50% YoY</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr">Q3 FY26</div><div class="bar-track"><div class="bar-fill cy" style="width:80%"><span class="bar-val">+44% YoY</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr">Q4 FY26E</div><div class="bar-track"><div class="bar-fill cy" style="width:86%"><span class="bar-val">+41% YoY (guide)</span></div></div></div>
+    </div>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">⚠️ FY2023 Revenue หดตัว -34% — แสดงให้เห็นว่า Downside ใน Downcycle รุนแรงมากแค่ไหน</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Gross Margin — ขึ้นลงตาม Cycle</div>
+    <div class="bar-chart">
+      <div class="bar-row"><div class="bar-yr" style="width:80px">FY23 (Trough)</div><div class="bar-track"><div class="bar-fill am" style="width:17%"><span class="bar-val">17% GM</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr" style="width:80px">FY24</div><div class="bar-track"><div class="bar-fill am" style="width:26%"><span class="bar-val">26% GM</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr" style="width:80px">FY25</div><div class="bar-track"><div class="bar-fill gn" style="width:37%"><span class="bar-val">37% GM</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr" style="width:80px">Q3 FY26</div><div class="bar-track"><div class="bar-fill cy" style="width:47%"><span class="bar-val">47% GM ← Record</span></div></div></div>
+      <div class="bar-row"><div class="bar-yr" style="width:80px">Normalized?</div><div class="bar-track"><div class="bar-fill am" style="width:32%"><span class="bar-val">~30–35% Through-Cycle</span></div></div></div>
+    </div>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">📌 Mozaic HAMR ช่วยให้ Normalized Margin ดีขึ้นถาวรหรือเปล่า? — นี่คือ <strong>คำถามที่สำคัญที่สุดใน Thesis</strong></p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Growth Triangle Analysis</div>
+      <table class="data-table">
+        <thead><tr><th>Metric</th><th>Q3 FY26</th><th>ประเมิน</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue Growth</td><td class="up">+44%</td><td class="up">✅ STRONG</td></tr>
+          <tr><td>Gross Margin</td><td class="up">47%</td><td class="up">✅ RECORD</td></tr>
+          <tr><td>Op. Margin</td><td class="up">37.5%</td><td class="up">✅ EXPANDING</td></tr>
+          <tr><td>EPS Growth YoY</td><td class="up">+115%</td><td class="neu">⚠️ BASE EFFECT</td></tr>
+          <tr><td>FCF Margin</td><td class="up">31%</td><td class="up">✅ DECADE HIGH</td></tr>
+          <tr><td>Exabyte Shipment</td><td class="up">199 EB (+39%)</td><td class="up">✅ VOLUME + PRICE</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Financial Health</div>
+      <div class="val-row"><div class="val-label">Net Debt (FY2026)</div><div class="val-num">~$4B <span class="badge aa">ELEVATED</span></div></div>
+      <div class="val-row"><div class="val-label">Net Debt / EBITDA</div><div class="val-num">~2–3x <span class="badge aa">WATCH</span></div></div>
+      <div class="val-row"><div class="val-label">Debt Repaid (Q3)</div><div class="val-num">$641M <span class="badge gg">DELEVERAGING</span></div></div>
+      <div class="val-row"><div class="val-label">FCF Q3 FY26</div><div class="val-num">$953M — Decade High <span class="badge gg">STRONG</span></div></div>
+      <div class="val-row"><div class="val-label">CapEx Intensity</div><div class="val-num">Rising — HAMR Ramp <span class="badge aa">WATCH</span></div></div>
+      <p style="font-size:11px; color:var(--muted); margin-top:12px">Debt Level ยังสูง — หาก Downcycle กลับมา FCF ที่ใช้ Deleverage จะกลายเป็นปัญหา Balance Sheet ได้</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ROIC Analysis — Asset-Heavy Model</div>
+    <div class="grid-2">
+      <div>
+        <div class="stat-block">
+          <div class="stat-num purple">~20–25%</div>
+          <div class="stat-label">ROIC (ณ Peak Cycle)</div>
+          <div class="stat-sub">vs ~95% ของ Mastercard</div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.7">ROIC ของ STX ผ่านเกณฑ์ขั้นต่ำ (>15%) เฉพาะในช่วง Upcycle เท่านั้น ในปี 2023 (Downcycle) ROIC ติดลบ สะท้อนว่า Business ต้องการ Cycle ที่ดีเพื่อสร้าง Real Return</p>
+      </div>
+      <div>
+        <div class="stat-block">
+          <div class="stat-num amber">~20%</div>
+          <div class="stat-label">Revenue as Profit (Net Margin)</div>
+          <div class="stat-sub">ดีกว่า Sector avg แต่ Cyclical</div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.7">ข้อดีของ HAMR Transition: เปลี่ยน Revenue Mix ไปหา Higher-Margin สินค้า ทำให้ Through-Cycle Margin ดีขึ้น — แต่ยังไม่ได้รับการพิสูจน์ผ่าน Full Downcycle</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RISKS -->
+<div id="risks" class="section">
+  <div class="section-label">04 — Key Risks — STX มีความเสี่ยงที่ต่างจาก MA โดยสิ้นเชิง</div>
+
+  <div class="risk-card">
+    <div class="risk-title">🔴 RISK #1: Cyclical Downturn — "What Goes Up Must Come Down"</div>
+    <div class="risk-body">
+      HDD Industry มีประวัติวัฏจักรที่รุนแรง — ในปี 2022-2023 Seagate Revenue หดตัว -34% YoY และ Gross Margin ร่วงจาก 30%+ ลงไปที่ 17% เพียงในเวลา 2 ปี ปัจจุบันอยู่ใน Peak Cycle ที่ขับเคลื่อนโดย AI Buildout — เมื่อ Hyperscaler ชะลอ CapEx หรือ Inventory สะสมจนเกิน Demand รายได้และ Margin จะหดหายเร็วกว่าที่ตลาดคาด
+    </div>
+    <div class="risk-verdict">PROBABILITY: MEDIUM-HIGH (เมื่อ AI Buildout ชะลอ) | IMPACT: VERY HIGH | ราคาจะร่วง 40–60% ในสถานการณ์นี้</div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-title">🔴 RISK #2: SSD / Flash Price Disruption</div>
+    <div class="risk-body">
+      SSD มีราคาลดลงต่อเนื่องจาก Economy of Scale ของ NAND Flash ปัจจุบัน HDD ยังได้เปรียบด้าน Cost per Terabyte สำหรับ Cold Storage แต่ถ้า NAND Price ลดลงเร็วกว่าที่คาด หรือ Compute Near Storage Architecture เปลี่ยนไป — Nearline HDD จะสูญเสีย TCO Advantage และเผชิญการ Substitution ระยะยาว (5–10 ปี)
+    </div>
+    <div class="risk-verdict">PROBABILITY: LOW (2–3 ปี) / MEDIUM (5+ ปี) | IMPACT: EXISTENTIAL | HDD to SSD Shift เกิดแล้วใน Consumer — Enterprise กำลังตามมาช้าๆ</div>
+  </div>
+
+  <div class="risk-card">
+    <div class="risk-title">🟡 RISK #3: Valuation Compression + Debt Risk</div>
+    <div class="risk-body">
+      STX ซื้อขายที่ ~97x TTM P/E (416% เหนือ 10Y Historical Average ที่ 18x) — Consensus Analyst Target $898 อยู่ต่ำกว่าราคาปัจจุบัน $941 แล้ว หาก Earnings Growth ชะลอ หรือ Cycle หมุนลง P/E ที่ 97x สามารถ Compress กลับสู่ 15–25x ได้ง่ายๆ คิดเป็น Downside ที่ -70% ถึง -75% โดยไม่ต้องให้ Business ล้มเลย นอกจากนี้ Net Debt ~$4B ในช่วง Downcycle ทำให้ความเสี่ยงซ้ำเติม
+    </div>
+    <div class="risk-verdict">PROBABILITY: HIGH (หาก Cycle หมุน) | IMPACT: CATASTROPHIC สำหรับผู้ถือ ณ ราคานี้</div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <div class="card-title">🟢 ทำไม Bull Case ยังมีอยู่?</div>
+    <p style="font-size:13px; line-height:1.8">
+      <strong>Structural Upgrade Argument:</strong> Mozaic HAMR เปลี่ยน Economics ของ HDD อย่างถาวร — ถ้า Normalized Margin อยู่ที่ 35–40% (ไม่ใช่ 20–25% แบบเดิม) EPS Power ของ STX สูงกว่าที่ Historical P/E Analysis แนะนำ<br><br>
+      <strong>AI Supercycle Duration:</strong> Data Center buildout ของ Hyperscaler มีวงจรยาว 3–5 ปี ไม่ใช่ Short Cycle — แปลว่า Peak อาจยังไม่มาเร็วๆ นี้ โดยเฉพาะหากการ Scale AI Inferencing ต้องการ Cold Storage ปริมาณมากขึ้นอย่างต่อเนื่อง<br><br>
+      <strong>Revenue Target Upgrade:</strong> Management เพิ่ง Raise Long-term Annual Revenue Growth Target จาก Low-to-Mid Teens ขึ้นเป็น <strong>≥20%/ปี</strong> — ถ้าทำได้จริง EPS FY2028 อาจสูงถึง $25–30
+    </p>
+  </div>
+</div>
+
+<!-- VALUATION -->
+<div id="valuation" class="section">
+  <div class="section-label">05 — Valuation — ความท้าทายหลักของ STX</div>
+
+  <div class="warn-box">
+    <div class="warn-title">⚠️ วิธีการ Value STX ต้องต่างจาก MA ทั้งหมด</div>
+    <p style="font-size:13px; line-height:1.8; color:var(--text)">P/E สำหรับ Cyclical Company ที่ Peak Cycle <strong>ให้ข้อมูลผิด</strong> — P/E ดูต่ำเสมอที่ Peak (เพราะ Earnings สูง) และดูสูงที่ Trough ใช้ <strong>EV/EBITDA Through-Cycle, P/S, และ DCF ที่ Conservative</strong> แทน</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num red">97x</div>
+      <div class="stat-label">TTM P/E (ณ Peak)</div>
+      <div class="stat-sub">10Y avg: 18x — Misleading Metric</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num amber">~20x</div>
+      <div class="stat-label">Forward P/E (FY2027E)</div>
+      <div class="stat-sub">ถ้า EPS $47+ จริง — Aggressive</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num purple">0.69x</div>
+      <div class="stat-label">PEG Ratio</div>
+      <div class="stat-sub">ดูถูก — แต่ Growth Estimate เชื่อถือได้แค่ไหน?</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Fair Value — 3 Scenarios</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Scenario</th><th>Assumption</th><th>EPS FY2027</th><th>Multiple</th><th>Fair Value</th><th>vs $941</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>🐂 Bull — Structural Upgrade</strong></td>
+          <td style="font-size:11px; color:var(--muted)">Mozaic ทำให้ Normalized GM 40%+, Revenue 20%+/ปี</td>
+          <td class="up">$40–50</td>
+          <td class="up">25–30x</td>
+          <td class="up">$1,000–1,500</td>
+          <td class="up">+6% ถึง +59%</td>
+        </tr>
+        <tr>
+          <td><strong>📊 Base — Soft Landing</strong></td>
+          <td style="font-size:11px; color:var(--muted)">Revenue growth ชะลือเป็น 12-15%, GM 35-40%</td>
+          <td class="neu">$25–35</td>
+          <td class="neu">20–22x</td>
+          <td class="neu">$500–770</td>
+          <td class="neu">-18% ถึง -47%</td>
+        </tr>
+        <tr>
+          <td><strong>🐻 Bear — Downcycle Returns</strong></td>
+          <td style="font-size:11px; color:var(--muted)">AI CapEx ชะลอ, Inventory Correction, GM 20-25%</td>
+          <td class="dn">$5–12</td>
+          <td class="dn">15x</td>
+          <td class="dn">$75–180</td>
+          <td class="dn">-81% ถึง -92%</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.7">⚠️ Asymmetry ที่น่ากลัว: Bull Case Upside ~59% แต่ Bear Case Downside ~81–92% — Risk/Reward ไม่สมดุล ณ ราคา $941</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">EV/EBITDA — Through-Cycle Valuation (เหมาะกว่า P/E)</div>
+    <div class="val-row"><div class="val-label">EV ปัจจุบัน</div><div class="val-num">~$228B <span class="badge rr">MEGA CAP</span></div></div>
+    <div class="val-row"><div class="val-label">EBITDA Annualized (Q3 Run-rate)</div><div class="val-num">~$5.5–6B <span class="badge bg">PEAK</span></div></div>
+    <div class="val-row"><div class="val-label">EV/EBITDA ปัจจุบัน</div><div class="val-num">~38–42x <span class="badge rr">EXPENSIVE</span></div></div>
+    <div class="val-row"><div class="val-label">Historical EV/EBITDA Range</div><div class="val-num">5–12x <span class="badge bg">NORMAL CYCLE</span></div></div>
+    <div class="val-row"><div class="val-label">Through-Cycle EBITDA (est.)</div><div class="val-num">~$3–4B <span class="badge aa">CONSERVATIVE</span></div></div>
+    <div class="val-row"><div class="val-label">Fair EV ที่ 10–12x Through-Cycle</div><div class="val-num">$30–48B = $150–240/share <span class="badge rr">FAR BELOW CURRENT</span></div></div>
+    <p style="font-size:12px; color:var(--muted); margin-top:12px; line-height:1.7">ถ้าใช้ Through-Cycle Valuation Framework ราคาปัจจุบันดูแพงมาก — แต่ถ้า HAMR เปลี่ยน Structural Margin ได้จริง Through-Cycle EBITDA ควรสูงขึ้นเป็น $5–7B ทำให้ Fair Value อยู่ที่ $250–420 (ยังต่ำกว่า $941 มาก)</p>
+  </div>
+
+  <div class="thesis-block warn">
+    <div class="thesis-heading warn">สรุปมุมมอง Valuation</div>
+    <div class="thesis-text">
+      ณ $941 — STX ถูก Price เพื่อ <strong>ทุกอย่างต้องเป็นไปได้ด้วยดี</strong>: AI Buildout ต้องยืดยาว, HAMR Margin ต้องคงที่ที่ 45%+, Competition ต้องไม่รุนแรง, Debt ต้องหมดก่อน Cycle หมุน Market Cap ปัจจุบัน $224B สูงกว่า หลายปีที่ผ่านมาไม่เคยเห็น — นี่คือ "Priced for Perfection"<br><br>
+      <strong>Consensus Analyst Target $898 ต่ำกว่าราคาตลาดแล้ว</strong> — แปลว่านักวิเคราะห์ที่ติดตามอย่างใกล้ชิดก็ไม่เห็น Upside ณ ระดับนี้ Fox Advisors เพิ่งดาวน์เกรดเป็น Equal-Weight โดยระบุว่า HDD Pricing Expectation "Getting Ahead" ของความเป็นจริง
+    </div>
+  </div>
+</div>
+
+<!-- POSITION PLAN -->
+<div id="position" class="section">
+  <div class="section-label">06 — Position Plan: Entry · Fair Value · Rebalance</div>
+
+  <div class="grid-3">
+    <div class="stat-block">
+      <div class="stat-num red">$941</div>
+      <div class="stat-label">ราคาปัจจุบัน (Jun 27, 2026)</div>
+      <div class="stat-sub">52W Range: ไม่ทราบ Low / High ~$941</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num amber">$898</div>
+      <div class="stat-label">Consensus 12M Target</div>
+      <div class="stat-sub">24 analysts — ต่ำกว่าราคาแล้ว</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num purple">$500–770</div>
+      <div class="stat-label">Base Case Fair Value</div>
+      <div class="stat-sub">Discount ต่อราคาปัจจุบัน ~18–47%</div>
+    </div>
+  </div>
+
+  <!-- FAIR VALUE -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🎯 Fair Value Framework สำหรับ Cyclical Business</div>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.7">ไม่ใช้ P/E เป็น Primary สำหรับ STX — ใช้ <strong>3 Metrics ที่เหมาะกับ Cyclical</strong>:</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Method</th><th>Assumption</th><th>Fair Value</th><th>น้ำหนัก</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>① EV/EBITDA Through-Cycle</strong></td>
+          <td style="font-size:11px; color:var(--muted)">EBITDA ~$5B (ถ้า HAMR Structural), 10–12x</td>
+          <td class="neu">$250–420</td>
+          <td class="neu">35%</td>
+        </tr>
+        <tr>
+          <td><strong>② P/EPS-Power (Normalized)</strong></td>
+          <td style="font-size:11px; color:var(--muted)">EPS Power $25–30 ใน Through-Cycle, 18–22x</td>
+          <td class="neu">$450–660</td>
+          <td class="neu">40%</td>
+        </tr>
+        <tr>
+          <td><strong>③ P/S Ratio</strong></td>
+          <td style="font-size:11px; color:var(--muted)">Revenue $14B+ FY2027, Historical P/S 1.5–2.5x</td>
+          <td class="neu">$350–580</td>
+          <td class="neu">25%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px; padding:20px; background:var(--card2); border-radius:4px; border-left:3px solid var(--amber)">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--amber); letter-spacing:0.15em; margin-bottom:10px">WEIGHTED FAIR VALUE (BASE CASE)</div>
+      <div style="display:flex; gap:24px; align-items:center; flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif; font-size:52px; color:#fff; line-height:1">$350 – $600</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px">Conservative → Base Case Fair Value</div>
+        </div>
+        <div style="flex:1; min-width:200px">
+          <div style="font-size:13px; line-height:1.8; color:var(--text)">
+            ราคาปัจจุบัน <strong style="color:var(--red)">$941</strong> สูงกว่า Base Case Fair Value <strong style="color:var(--red)">57–168%</strong><br>
+            → <strong style="color:var(--red)">ไม่มี Margin of Safety ณ ราคานี้</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px; padding:16px; background:#1a0800; border-radius:4px; border:1px solid #3d1a00">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--amber); letter-spacing:0.12em; margin-bottom:8px">BULL CASE FAIR VALUE (IF STRUCTURAL THESIS IS CORRECT)</div>
+      <p style="font-size:12px; color:var(--muted); line-height:1.7">ถ้า HAMR จริงๆ ทำให้ Normalized EPS อยู่ที่ $40–50 และตลาด Re-rate ไปที่ 22–25x (Justified โดย 20%+ Growth) → Fair Value $880–1,250 ใน 2–3 ปี แต่นี่คือ <strong>Bull Case</strong> ที่ต้องทุกอย่างถูกต้อง</p>
+    </div>
+  </div>
+
+  <!-- ENTRY -->
+  <div class="card">
+    <div class="card-title">📥 Entry Framework — ณ ราคา $941 ทำอะไรดี?</div>
+
+    <div class="entry-card">
+      <div class="entry-header red">
+        <div class="entry-label red">❌ ไม่แนะนำ — New Position ณ ราคาปัจจุบัน</div>
+        <div class="badge rr">AVOID</div>
+      </div>
+      <div class="entry-body">
+        <div class="entry-title">ราคา $941 ไม่มี Margin of Safety เพียงพอสำหรับ Cyclical Business</div>
+        <div class="entry-desc">Risk/Reward ไม่สมดุล — Upside Bull Case ~+59% แต่ Downside Base Case ~-47% และ Bear Case ~-80%+ สำหรับธุรกิจที่ Cyclical และมี Debt สูง การเข้าซื้อที่ราคา Peak Cycle โดยไม่มี Buffer ไม่ใช่ Disciplined Investing</div>
+        <div class="entry-metric">RULE: Cyclical Stock ควรซื้อเมื่อ P/E ดูสูง (ที่ Trough) ไม่ใช่เมื่อ P/E ดูต่ำ (ที่ Peak)</div>
+      </div>
+    </div>
+
+    <div class="entry-card">
+      <div class="entry-header amber">
+        <div class="entry-label amber">⚡ ถ้าถือแล้ว — Reduce Position หรือ Hedge</div>
+        <div class="badge aa">TRIM</div>
+      </div>
+      <div class="entry-body">
+        <div class="entry-title">ผู้ที่ถือ STX อยู่แล้วควรพิจารณา Reduce ทยอย</div>
+        <div class="entry-desc">Consensus Target ต่ำกว่าราคาแล้ว + CEO ขาย 23 ธุรกรรมในวันเดียว + Fox Advisors Downgrade = Signal ที่ควรระมัดระวัง การล็อค Profit บางส่วนเป็น Risk Management ที่ชาญฉลาด</div>
+        <div class="entry-metric">ACTION: Trim 30–50% ณ $900–950 | Hold เหลือเพื่อ Upside หาก Bull Thesis ถูก</div>
+      </div>
+    </div>
+
+    <div class="entry-card">
+      <div class="entry-header green">
+        <div class="entry-label green">✅ ราคาที่น่าสนใจสำหรับ New Entry</div>
+        <div class="badge gg">WATCH LIST</div>
+      </div>
+      <div class="entry-body">
+        <div class="entry-title">Entry Zone: $350–$500 (หากราคาปรับฐาน)</div>
+        <div class="entry-desc">ที่ $350–500 — Forward P/E อยู่ที่ ~10–14x บน Normalized EPS $35 ซึ่งเป็นราคาที่สะท้อน Cyclical Risk + Debt Risk อย่างเหมาะสมแล้ว และ Bull Case Upside ขยายเป็น +150–200% จากราคาซื้อ — เมื่อนั้น Risk/Reward จะน่าสนใจมาก</div>
+        <div class="entry-metric">TRIGGER: ราคาลงสู่ Zone + AI CapEx Data ยืนยัน Demand ยังแข็ง + Management ไม่ขายหุ้นเพิ่ม</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 TRANCHE PLAN (CONDITIONAL) -->
+  <div class="card">
+    <div class="card-title">📋 Entry Plan (แบบมีเงื่อนไข) — หากราคาปรับฐาน</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Tranche</th><th>ราคาเป้า</th><th>สัดส่วน</th><th>Normalized P/E</th><th>เหตุผล</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tranche 1</strong></td>
+          <td class="neu">$450–$550</td>
+          <td class="up">35%</td>
+          <td class="neu">~13–16x Norm. EPS</td>
+          <td style="font-size:11px; color:var(--muted)">Valuation Reasonable + ยืนยัน Demand แข็งอยู่</td>
+        </tr>
+        <tr>
+          <td><strong>Tranche 2</strong></td>
+          <td class="up">$350–$450</td>
+          <td class="up">40%</td>
+          <td class="up">~10–13x Norm. EPS</td>
+          <td style="font-size:11px; color:var(--muted)">Cycle Fear Max + Cheap on Any Scenario</td>
+        </tr>
+        <tr>
+          <td><strong>Tranche 3</strong></td>
+          <td class="up">$250–$350</td>
+          <td class="up">25%</td>
+          <td class="up">~7–10x Norm. EPS</td>
+          <td style="font-size:11px; color:var(--muted)">Deep Value หาก Downcycle Full Blown</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">⚠️ ราคาทั้ง 3 Tranche ยังห่างจากปัจจุบัน $941 มาก — ให้ใส่ใน Watch List และรอ Catalyst ที่ทำให้ Cycle หมุน</p>
+  </div>
+
+  <!-- REBALANCE -->
+  <div class="card">
+    <div class="card-title">📤 Rebalance & Exit — ใช้กรอบ Cycle-Based ไม่ใช่ Price-Based</div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-family:var(--mono); font-size:10px; color:var(--cyan); letter-spacing:0.15em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border)">A. REBALANCE (ถ้าถือแล้ว)</div>
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--amber)">
+          <div style="font-size:13px; font-weight:600; color:var(--amber); margin-bottom:4px">📉 Gross Margin Peak Signal — GM เริ่มหดจาก Peak 47%</div>
+          <p style="font-size:12px; color:var(--muted)">เมื่อ Gross Margin เริ่มหดลงต่อเนื่อง 2 ไตรมาสจาก Peak — แปลว่า Pricing Environment เริ่มอ่อน Reduce 30–40% Position ทันที</p>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:8px">TRIGGER: GM ลงจาก 47% → 40% | ACTION: Trim 30%</div>
+        </div>
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--amber)">
+          <div style="font-size:13px; font-weight:600; color:var(--amber); margin-bottom:4px">📦 Hyperscaler CapEx Guidance Cut</div>
+          <p style="font-size:12px; color:var(--muted)">AWS, Azure, Google ประกาศชะลอ Data Center CapEx 10%+ — เป็น Leading Indicator ของ HDD Demand ที่น่าเชื่อถือมาก</p>
+          <div style="font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:8px">SOURCE: ติดตาม AWS/Azure/GCP Earnings Call ทุกไตรมาส</div>
+        </div>
+        <div style="padding:14px; background:var(--card2); border-radius:4px; border-left:2px solid var(--amber)">
+          <div style="font-size:13px; font-weight:600; color:var(--amber); margin-bottom:4px">🏃 Insider Selling ต่อเนื่อง</div>
+          <p style="font-size:12px; color:var(--muted)">CEO และ C-suite ยังขายหุ้นต่อเนื่องหลังจาก March 2026 — ลด Position ให้สอดคล้องกับ Management Confidence Level</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:var(--mono); font-size:10px; color:var(--red); letter-spacing:0.15em; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border)">B. FULL EXIT (Thesis Broken)</div>
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 Revenue หดตัว YoY ต่อเนื่อง 2 ไตรมาส</div>
+          <div class="risk-body">Downcycle เริ่มแล้วจริงๆ ไม่ใช่แค่ Soft Patch — ในสถานการณ์นี้ราคาจะร่วงเร็วมาก Exit ทันที</div>
+          <div class="risk-verdict">WATCH: Quarterly Revenue vs. Prior Year — ต้องยืนบวกตลอด</div>
+        </div>
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 WDC HAMR Qualification ครบทุก Hyperscaler ใหญ่</div>
+          <div class="risk-body">เมื่อ Western Digital เสร็จ HAMR Qualification หมดแล้ว Seagate เสีย First-Mover Advantage และ Pricing Power — Competition จะรุนแรงขึ้นทันที</div>
+          <div class="risk-verdict">EXPECTED: WDC HAMR qualification ครบ ~2027 — ติดตาม WDC Earnings ทุกไตรมาส</div>
+        </div>
+        <div class="risk-card" style="margin-bottom:0">
+          <div class="risk-title">🚨 Gross Margin หดต่ำกว่า 30% ถาวร</div>
+          <div class="risk-body">แปลว่า HAMR ไม่ได้ทำให้ Structural Margin ดีขึ้น — Thesis หลักของ Bull Case พัง Exit ทั้งหมด</div>
+          <div class="risk-verdict">WATCH: GM Trend ทุกไตรมาส — 30% คือ Line ที่ต้องรักษา</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI DASHBOARD -->
+  <div class="card">
+    <div class="card-title">📡 KPI Monitoring — ดู 5 ตัวนี้ทุกไตรมาส</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>KPI</th><th>เขียว (Thesis Intact)</th><th>เหลือง (Caution)</th><th>แดง (Exit/Reduce)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Gross Margin</strong></td><td class="up">&gt;42%</td><td class="neu">35–42%</td><td class="dn">&lt;30%</td></tr>
+        <tr><td><strong>Revenue Growth YoY</strong></td><td class="up">&gt;15%</td><td class="neu">5–15%</td><td class="dn">&lt;0% (Decline)</td></tr>
+        <tr><td><strong>Exabyte Shipment Growth</strong></td><td class="up">&gt;30% YoY</td><td class="neu">15–30%</td><td class="dn">&lt;10%</td></tr>
+        <tr><td><strong>Hyperscaler CapEx (AWS/Azure)</strong></td><td class="up">Growing</td><td class="neu">Flat</td><td class="dn">Declining</td></tr>
+        <tr><td><strong>FCF (Quarterly)</strong></td><td class="up">&gt;$700M</td><td class="neu">$300–700M</td><td class="dn">&lt;$200M (Debt Risk)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin-top:12px">📅 Next Earnings: Q4 FY2026 ประมาณ <strong style="color:var(--cyan)">ปลายกรกฎาคม / ต้นสิงหาคม 2026</strong></p>
+  </div>
+
+  <div class="thesis-block warn">
+    <div class="thesis-heading warn">สรุป Position Discipline — STX</div>
+    <div class="thesis-text">
+      STX เป็นหุ้นที่ <strong>"ถูกมากในเวลาที่ใช่ และแพงมากในเวลาที่ผิด"</strong> — ณ $941 ตลาดกำลัง Price Bull Case ไปหมดแล้ว โดยมี Downside ที่ไม่สมมาตรกับ Upside ที่เหลือ สำหรับ Value-Growth Investor ที่ยึดกรอบ Buffett-Fisher: การซื้อ Cyclical Stock ที่ Peak Cycle ต้องการ Margin of Safety ที่มากกว่าปกติ ไม่ใช่น้อยกว่า<br><br>
+      <strong>คำแนะนำเชิงกระบวนการ:</strong> ใส่ STX ใน Watchlist | รอ Gross Margin เริ่มหด | รอ Hyperscaler CapEx Signal | รอราคาลงสู่ Zone $350–550 ก่อนพิจารณาเข้า — แล้วจะได้ Risk/Reward ที่น่าสนใจกว่านี้อย่างมาก<br><br>
+      <strong>ข้อสรุปเชิง Framework:</strong> STX ไม่ใช่หุ้นที่ใช้กรอบ Wide Moat Compounder แบบ MA ได้ตรงๆ มันคือ <em>Cyclical Tech Play ที่ต้องใช้ Cycle Timing และ Valuation Discipline</em> — เป็นคนละเกมกันโดยสิ้นเชิง
+    </div>
+  </div>
+</div>
+
+<footer>
+  รายงานนี้จัดทำโดย AI Investment Analyst เพื่อการศึกษาและวิเคราะห์เชิงกรอบความคิดเท่านั้น ไม่ใช่คำแนะนำในการลงทุน ข้อมูลอ้างอิงจาก Seagate SEC Filings (8-K, 10-Q), Earnings Transcripts Q3 FY2026 และแหล่งข้อมูลสาธารณะ ณ มิถุนายน 2569 | ผู้ลงทุนควรทำการศึกษาด้วยตนเองก่อนตัดสินใจ
+</footer>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
