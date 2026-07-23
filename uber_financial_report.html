@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uber Technologies (UBER) — Financial Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:        #12151A;
+    --panel:     #1B1F26;
+    --panel-2:   #21262E;
+    --line:      #2E343D;
+    --ink:       #E9E7E0;
+    --ink-dim:   #9BA1AC;
+    --ink-faint: #666D78;
+    --pos:       #5FC9B4;
+    --neg:       #E0745C;
+    --accent:    #D9B36C;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent); color:#12151A; }
+
+  a{ color:inherit; }
+
+  .wrap{ max-width:980px; margin:0 auto; padding:0 28px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    border-bottom:1px solid var(--line);
+    padding:22px 0 18px;
+    position:sticky; top:0;
+    background:rgba(18,21,26,0.92);
+    backdrop-filter:blur(6px);
+    z-index:50;
+  }
+  .masthead-row{
+    display:flex; align-items:baseline; justify-content:space-between;
+    flex-wrap:wrap; gap:10px 24px;
+  }
+  .ticker-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.12em;
+    color:var(--accent); text-transform:uppercase;
+    border:1px solid var(--accent); border-radius:3px;
+    padding:2px 7px; margin-right:10px;
+  }
+  .masthead h1{
+    font-family:'Newsreader', serif;
+    font-weight:500; font-size:26px; margin:0;
+    display:inline; letter-spacing:-0.01em;
+  }
+  .masthead .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:var(--ink-dim);
+    display:flex; gap:18px; flex-wrap:wrap;
+  }
+  .masthead .meta span b{ color:var(--ink); font-weight:500; }
+
+  /* ---------- Ledger tape (signature element) ---------- */
+  .tape{
+    margin-top:20px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--panel);
+    padding:18px 20px 14px;
+  }
+  .tape-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-faint); margin-bottom:14px;
+  }
+  .tape-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:14px;
+  }
+  .tape-col{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .bars{
+    position:relative;
+    width:100%; height:96px;
+    display:flex; align-items:flex-end; justify-content:center; gap:5px;
+  }
+  .bar{
+    width:38%;
+    border-radius:2px 2px 0 0;
+    transition:filter .15s ease;
+  }
+  .bar.rev{ background:linear-gradient(180deg, #7FDCC9, var(--pos)); }
+  .bar.fcf.pos{ background:linear-gradient(180deg, #E8C489, var(--accent)); }
+  .bar.fcf.neg{ background:var(--neg); align-self:flex-start; margin-top:0; }
+  .zero-line{
+    position:absolute; left:0; right:0;
+    border-top:1px dashed #454C57;
+  }
+  .tape-col .yr{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--ink-dim);
+  }
+  .tape-legend{
+    display:flex; gap:22px; margin-top:14px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-dim);
+  }
+  .swatch{ display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ---------- Nav ---------- */
+  nav.toc{
+    display:flex; gap:2px; flex-wrap:wrap;
+    margin-top:16px;
+  }
+  nav.toc a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--ink-dim);
+    text-decoration:none;
+    padding:6px 10px;
+    border-radius:3px;
+  }
+  nav.toc a:hover{ background:var(--panel-2); color:var(--ink); }
+
+  /* ---------- Sections ---------- */
+  section{ padding:44px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 8px;
+  }
+  h2{
+    font-family:'Newsreader', serif;
+    font-weight:500; font-size:27px;
+    margin:0 0 18px; letter-spacing:-0.01em;
+  }
+  p{ line-height:1.65; color:#CFCDC6; font-size:15px; }
+  .lede{
+    font-family:'Newsreader', serif;
+    font-size:19px; line-height:1.6;
+    color:var(--ink); font-style:italic;
+    font-weight:400;
+  }
+
+  /* ---------- Tables ---------- */
+  .tbl-wrap{ overflow-x:auto; margin-top:6px; border:1px solid var(--line); border-radius:6px; }
+  table{
+    width:100%; border-collapse:collapse;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    min-width:640px;
+  }
+  thead th{
+    text-align:right;
+    font-weight:500;
+    color:var(--ink-faint);
+    text-transform:uppercase; letter-spacing:0.04em;
+    font-size:10.5px;
+    background:var(--panel-2);
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  thead th:first-child, tbody td:first-child{ text-align:left; }
+  tbody td{
+    text-align:right;
+    padding:9px 12px;
+    color:var(--ink);
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  tbody tr:nth-child(odd){ background:rgba(255,255,255,0.015); }
+  tbody tr:hover{ background:rgba(217,179,108,0.06); }
+  tbody tr.ttm{ background:rgba(95,201,180,0.07); font-weight:500; }
+  tbody tr.ttm td:first-child{ color:var(--pos); }
+  .pos{ color:var(--pos); }
+  .neg{ color:var(--neg); }
+  .nm{ color:var(--ink-faint); font-style:italic; }
+
+  .table-note{
+    font-size:12px; color:var(--ink-faint); margin-top:8px; line-height:1.55;
+  }
+
+  /* ---------- Stat strip ---------- */
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+    gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:6px; overflow:hidden;
+    margin-top:16px;
+  }
+  .stat{ background:var(--panel); padding:16px 18px; }
+  .stat .label{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.06em; }
+  .stat .value{ font-family:'IBM Plex Mono',monospace; font-size:21px; margin-top:6px; color:var(--ink); }
+
+  /* ---------- Findings list ---------- */
+  .findings{ list-style:none; margin:0; padding:0; display:grid; gap:14px; }
+  .findings li{
+    padding:14px 16px; background:var(--panel);
+    border:1px solid var(--line); border-radius:6px;
+    border-left:3px solid var(--accent);
+    font-size:14.5px; line-height:1.6; color:#D6D4CD;
+  }
+  .findings li b{ color:var(--ink); }
+
+  .risks{ list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+  .risks li{
+    font-size:14px; line-height:1.6; color:var(--ink-dim);
+    padding-left:18px; position:relative;
+  }
+  .risks li::before{ content:"—"; position:absolute; left:0; color:var(--neg); }
+
+  footer{
+    padding:36px 0 60px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--ink-faint);
+    line-height:1.8;
+  }
+  footer a{ color:var(--ink-dim); }
+
+  @media (max-width:640px){
+    .tape-grid{ grid-template-columns:repeat(3,1fr); row-gap:22px; }
+    h2{ font-size:23px; }
+    .masthead h1{ font-size:20px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <div class="masthead-row">
+      <div><span class="ticker-tag">NYSE · UBER</span><h1>Uber Technologies, Inc.</h1></div>
+      <div class="meta">
+        <span>CEO <b>Dara Khosrowshahi</b></span>
+        <span>Close (Jul 22, 2026) <b>$70.33</b></span>
+        <span>Mkt Cap <b>$143.2B</b></span>
+      </div>
+    </div>
+    <nav class="toc">
+      <a href="#summary">Summary</a>
+      <a href="#income">Income Statement</a>
+      <a href="#cashflow">Cash Flow</a>
+      <a href="#growth">Growth</a>
+      <a href="#cagr">CAGR</a>
+      <a href="#valuation">Valuation</a>
+      <a href="#findings">Key Findings</a>
+      <a href="#risks">Risks</a>
+      <a href="#conclusion">Conclusion</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="summary" style="padding-top:36px;">
+    <p class="eyebrow">Executive Summary — FY2021–TTM (Mar 2026)</p>
+    <p class="lede">Uber has moved from sustained losses through 2022 to durable GAAP profitability and rapidly expanding free cash flow — revenue grew from $17.5B to $52.0B (a ~31% CAGR), while free cash flow swung from a $743M outflow to $9.76B, and capital allocation has pivoted decisively toward buybacks.</p>
+
+    <div class="tape">
+      <div class="tape-title">Revenue &amp; Free Cash Flow, $M — FY2021 → TTM</div>
+      <div class="tape-grid">
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:32.5%" title="Revenue $17,455M"></div>
+            <div class="bar fcf neg" style="height:7.0%" title="FCF -$743M"></div>
+          </div><div class="yr">FY21</div></div>
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:59.4%" title="Revenue $31,877M"></div>
+            <div class="bar fcf pos" style="height:10.8%" title="FCF $390M"></div>
+          </div><div class="yr">FY22</div></div>
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:69.4%" title="Revenue $37,281M"></div>
+            <div class="bar fcf pos" style="height:38.9%" title="FCF $3,362M"></div>
+          </div><div class="yr">FY23</div></div>
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:81.9%" title="Revenue $43,978M"></div>
+            <div class="bar fcf pos" style="height:72.5%" title="FCF $6,895M"></div>
+          </div><div class="yr">FY24</div></div>
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:96.9%" title="Revenue $52,017M"></div>
+            <div class="bar fcf pos" style="height:99.4%" title="FCF $9,763M"></div>
+          </div><div class="yr">FY25</div></div>
+        <div class="tape-col"><div class="bars">
+            <div class="bar rev" style="height:100%" title="Revenue $53,687M"></div>
+            <div class="bar fcf pos" style="height:100%" title="FCF $9,799M"></div>
+          </div><div class="yr">TTM</div></div>
+      </div>
+      <div class="tape-legend">
+        <span><span class="swatch" style="background:var(--pos)"></span>Revenue</span>
+        <span><span class="swatch" style="background:var(--accent)"></span>Free cash flow (positive)</span>
+        <span><span class="swatch" style="background:var(--neg)"></span>Free cash flow (negative)</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="reporting-info">
+    <p class="eyebrow">Company &amp; Reporting Information</p>
+    <div class="stat-strip">
+      <div class="stat"><div class="label">Currency / Units</div><div class="value">USD, $M</div></div>
+      <div class="stat"><div class="label">Fiscal Year-End</div><div class="value">Dec 31</div></div>
+      <div class="stat"><div class="label">TTM Ending</div><div class="value">Mar 31, 2026</div></div>
+      <div class="stat"><div class="label">Price Date</div><div class="value">Jul 22, 2026</div></div>
+      <div class="stat"><div class="label">Data Access</div><div class="value">Jul 23, 2026</div></div>
+    </div>
+    <p class="table-note" style="margin-top:14px;">
+      Sources: <a href="https://stockanalysis.com/stocks/uber/financials/">stockanalysis.com/stocks/uber/financials</a>,
+      <a href="https://stockanalysis.com/stocks/uber/financials/cash-flow-statement/">.../cash-flow-statement</a>,
+      <a href="https://stockanalysis.com/stocks/uber/financials/ratios/">.../ratios</a>
+    </p>
+  </section>
+
+  <section id="income">
+    <p class="eyebrow">01 — Financials</p>
+    <h2>Income Statement</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Period</th><th>Revenue</th><th>Rev. Growth</th><th>Gross Profit</th><th>GPM</th><th>Operating Income</th><th>OPM</th><th>Net Income</th><th>NPM</th></tr></thead>
+        <tbody>
+          <tr><td>FY2021</td><td>17,455</td><td class="pos">56.70%</td><td>8,104</td><td>46.43%</td><td class="neg">-3,834</td><td class="neg">-21.97%</td><td class="neg">-533</td><td class="neg">-3.05%</td></tr>
+          <tr><td>FY2022</td><td>31,877</td><td class="pos">82.62%</td><td>12,218</td><td>38.33%</td><td class="neg">-1,832</td><td class="neg">-5.75%</td><td class="neg">-9,245</td><td class="neg">-29.00%</td></tr>
+          <tr><td>FY2023</td><td>37,281</td><td class="pos">16.95%</td><td>14,824</td><td>39.76%</td><td>1,110</td><td class="pos">2.98%</td><td>2,108</td><td class="pos">5.65%</td></tr>
+          <tr><td>FY2024</td><td>43,978</td><td class="pos">17.96%</td><td>17,327</td><td>39.40%</td><td>2,799</td><td class="pos">6.36%</td><td>9,883</td><td class="pos">22.47%</td></tr>
+          <tr><td>FY2025</td><td>52,017</td><td class="pos">18.28%</td><td>20,679</td><td>39.75%</td><td>5,565</td><td class="pos">10.70%</td><td>10,146</td><td class="pos">19.51%</td></tr>
+          <tr class="ttm"><td>TTM</td><td>53,687</td><td class="pos">18.30%</td><td>22,028</td><td>41.03%</td><td>6,260</td><td class="pos">11.66%</td><td>8,661</td><td class="pos">16.13%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Net Income includes minority interest, consistent with reported margin figures. TTM net income growth is negative YoY (-30.49%), mainly reflecting a large prior-year tax benefit rolling off rather than operating deterioration.</p>
+  </section>
+
+  <section id="cashflow">
+    <p class="eyebrow">02 — Financials</p>
+    <h2>Cash Flow &amp; Capital Allocation</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Period</th><th>CFO</th><th>CAPEX</th><th>FCF</th><th>FCF Growth</th><th>FCF Margin</th><th>Acquisitions</th><th>Buybacks</th><th>Dividends</th></tr></thead>
+        <tbody>
+          <tr><td>FY2021</td><td class="neg">-445</td><td class="neg">-298</td><td class="neg">-743</td><td class="nm">N/A</td><td class="neg">-4.26%</td><td class="neg">-2,314</td><td class="nm">N/A</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2022</td><td>642</td><td class="neg">-252</td><td>390</td><td class="nm">N/A</td><td>1.22%</td><td class="neg">-59</td><td class="nm">N/A</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2023</td><td>3,585</td><td class="neg">-223</td><td>3,362</td><td class="pos">762.05%</td><td>9.02%</td><td class="nm">N/A</td><td class="nm">N/A</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2024</td><td>7,137</td><td class="neg">-242</td><td>6,895</td><td class="pos">105.09%</td><td>15.68%</td><td class="nm">N/A</td><td class="neg">-1,252</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2025</td><td>10,099</td><td class="neg">-336</td><td>9,763</td><td class="pos">41.59%</td><td>18.77%</td><td class="neg">-815</td><td class="neg">-6,523</td><td class="nm">N/A</td></tr>
+          <tr class="ttm"><td>TTM</td><td>10,126</td><td class="neg">-327</td><td>9,799</td><td class="pos">0.37%</td><td>18.25%</td><td class="neg">-821</td><td class="neg">-7,749</td><td class="nm">N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Uber does not pay a dividend. Buybacks scaled from essentially nil through FY2023 to $6.5B in FY2025 and $7.7B TTM — now the dominant use of excess cash. Acquisition spend has been modest and episodic since the large FY2021 outlay.</p>
+  </section>
+
+  <section id="growth">
+    <p class="eyebrow">03 — Trends</p>
+    <h2>Revenue and FCF Growth</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Period</th><th>Revenue</th><th>Rev. Growth YoY</th><th>Free Cash Flow</th><th>FCF Growth YoY</th></tr></thead>
+        <tbody>
+          <tr><td>FY2021</td><td>17,455</td><td class="pos">56.70%</td><td class="neg">-743</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2022</td><td>31,877</td><td class="pos">82.62%</td><td>390</td><td class="nm">N/A</td></tr>
+          <tr><td>FY2023</td><td>37,281</td><td class="pos">16.95%</td><td>3,362</td><td class="pos">762.05%</td></tr>
+          <tr><td>FY2024</td><td>43,978</td><td class="pos">17.96%</td><td>6,895</td><td class="pos">105.09%</td></tr>
+          <tr><td>FY2025</td><td>52,017</td><td class="pos">18.28%</td><td>9,763</td><td class="pos">41.59%</td></tr>
+          <tr class="ttm"><td>TTM</td><td>53,687</td><td class="pos">18.30%</td><td>9,799</td><td class="pos">0.37%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">FCF growth has decelerated sharply as the base has grown — from triple-digit growth off a small/negative base to near-flat TTM — while revenue growth has settled into a steady mid-to-high-teens band after the FY2021–2022 pandemic-recovery surge.</p>
+  </section>
+
+  <section id="cagr">
+    <p class="eyebrow">04 — Compounding</p>
+    <h2>CAGR Analysis</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>Beginning (FY2021)</th><th>Ending (FY2025)</th><th>Periods</th><th>CAGR</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue</td><td>17,455</td><td>52,017</td><td>4</td><td class="pos">31.39%</td></tr>
+          <tr><td>Free Cash Flow</td><td class="neg">-743</td><td>9,763</td><td>4</td><td class="nm">N/M</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">FCF CAGR is N/M because the FY2021 base is negative. For reference only (not a standard CAGR per the reporting rules): FCF grew from $390M (FY2022, first positive year) to $9,763M (FY2025) — roughly 25x over three years — illustrating the scale of the swing from cash-burning to strongly cash-generative.</p>
+  </section>
+
+  <section id="valuation">
+    <p class="eyebrow">05 — Market</p>
+    <h2>Historical Valuation</h2>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Period</th><th>Price</th><th>Market Cap</th><th>PE Ratio</th><th>Diluted EPS</th><th>Earnings Yield</th></tr></thead>
+        <tbody>
+          <tr><td>FY2021</td><td>41.93</td><td>81,735</td><td class="nm">N/M</td><td class="neg">-0.29</td><td class="nm">N/M</td></tr>
+          <tr><td>FY2022</td><td>24.73</td><td>49,596</td><td class="nm">N/M</td><td class="neg">-4.65</td><td class="nm">N/M</td></tr>
+          <tr><td>FY2023</td><td>61.57</td><td>127,520</td><td>70.77</td><td>0.87</td><td>1.41%</td></tr>
+          <tr><td>FY2024</td><td>60.32</td><td>127,152</td><td>13.23</td><td>4.56</td><td>7.56%</td></tr>
+          <tr><td>FY2025</td><td>81.71</td><td>168,969</td><td>17.27</td><td>4.73</td><td>5.79%</td></tr>
+          <tr class="ttm"><td>Current</td><td>70.33</td><td>143,164</td><td>17.39</td><td>4.01 (TTM)</td><td>5.97%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stat-strip">
+      <div class="stat"><div class="label">5-Yr Avg PE (excl. N/M)</div><div class="value">33.76x</div></div>
+      <div class="stat"><div class="label">5-Yr Median PE (excl. N/M)</div><div class="value">17.27x</div></div>
+      <div class="stat"><div class="label">5-Yr Avg Earnings Yield</div><div class="value">4.92%</div></div>
+      <div class="stat"><div class="label">Current vs. Median</div><div class="value pos">+0.12x</div></div>
+    </div>
+    <p class="table-note">At 17.39x, current PE sits just above the median (17.27x) and well below the average (33.76x, skewed upward by FY2023's inflated 70.77x reading, which reflected unusually thin earnings rather than a rich valuation). Relative to the two "normal-earnings" years (FY2024, FY2025), current valuation is roughly in line with FY2024 and modestly below FY2025.</p>
+  </section>
+
+  <section id="findings">
+    <p class="eyebrow">06 — Synthesis</p>
+    <h2>Key Findings</h2>
+    <ul class="findings">
+      <li><b>Growth:</b> Revenue CAGR of 31.39% (FY2021–FY2025); growth decelerated from a pandemic-recovery-driven 82.62% (FY2022) to a steadier ~17–18% band in FY2023–TTM.</li>
+      <li><b>Margins:</b> GPM has been range-bound (~38–46%), while OPM and NPM expanded substantially — operating margin from -21.97% (FY2021) to 11.66% (TTM), profit margin from -3.05% to a peak of 22.47% (FY2024).</li>
+      <li><b>Cash generation:</b> FCF turned positive in FY2022 and scaled to $9.76B in FY2025; FCF margin rose from -4.26% to 18.77%. Growth is now decelerating (TTM growth of just 0.37%) as the base matures.</li>
+      <li><b>FCF vs. revenue growth:</b> FCF grew far faster than revenue through FY2023–FY2024 off a low/negative base, but has now converged with — and in the TTM period fallen behind — revenue growth, signaling that margin expansion is maturing.</li>
+      <li><b>Capital allocation:</b> Shift from acquisitions (notably the $2.3B FY2021 outlay) toward large-scale buybacks ($6.5B FY2025, $7.7B TTM). No dividend.</li>
+      <li><b>Valuation:</b> Current PE (17.39x) is near the median of the profitable-year range and well below the average, which is skewed by FY2023's earnings trough.</li>
+    </ul>
+  </section>
+
+  <section id="risks">
+    <p class="eyebrow">07 — Caveats</p>
+    <h2>Risks &amp; Data Limitations</h2>
+    <ul class="risks">
+      <li>Only three of the five fiscal years (FY2023–FY2025) plus TTM/Current have meaningful PE and earnings-yield readings; FY2021–FY2022 losses make those years N/M, narrowing the historical valuation sample used for averages/medians.</li>
+      <li>Net income includes minority interest and has been affected by large non-operating items (equity-investment marks, tax valuation allowance releases) in several years, which can distort period-over-period comparisons versus core operating performance.</li>
+      <li>Uber has ongoing large-scale corporate activity (e.g., a reported pursuit of Delivery Hero) not reflected in the historical financials above, which could affect future capital allocation and consolidated results.</li>
+      <li>Data sourced from StockAnalysis.com (Fiscal.ai), last updated May 6, 2026 for financials/cash-flow/ratios tables; some later developments (e.g., pending M&A) are not yet reflected in these figures.</li>
+    </ul>
+  </section>
+
+  <section id="conclusion" style="border-bottom:none;">
+    <p class="eyebrow">08 — Close</p>
+    <h2>Conclusion</h2>
+    <p>Uber's five-year financial arc is one of a business that has converted rapid, capital-intensive growth into a high-margin, cash-generative model: revenue nearly tripled, operating and net margins moved from deeply negative to solidly positive, and free cash flow went from a $743M outflow to nearly $9.8B. Growth has normalized into the high-teens range, and the capital allocation focus has shifted decisively to share repurchases. At a PE near the middle of its (short) history of profitable years, the stock does not appear expensive relative to its own recent trading range, though the earnings base still carries some volatility from non-operating items worth monitoring.</p>
+  </section>
+
+  <footer>
+    Uber Technologies, Inc. (NYSE: UBER) · Financial Report · Data as of Jul 22–23, 2026<br>
+    Source: StockAnalysis.com (Fiscal.ai) — income statement, cash flow statement, ratios &amp; metrics.<br>
+    This document is informational only and is not investment advice.
+  </footer>
+
+</div>
+
+</body>
+</html>
