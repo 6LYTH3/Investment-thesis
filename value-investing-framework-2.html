@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมุดบันทึกนักลงทุน — กรอบการประเมินธุรกิจแบบ Buffett</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A26;
+    --paper:#ECE7DA;
+    --paper-2:#E2DCCB;
+    --brass:#9C7A34;
+    --brass-light:#C7A45C;
+    --forest:#2F4C3E;
+    --rust:#8B3A3A;
+    --line:#c9c0a6;
+    --cream-text:#F3EEE0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans Thai', sans-serif;
+    font-weight:400;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brass-light); color:var(--ink);}
+
+  /* Ledger paper texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      repeating-linear-gradient(transparent, transparent 38px, rgba(27,42,38,0.05) 39px);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{max-width:900px; margin:0 auto; padding:0 28px 120px; position:relative; z-index:1;}
+
+  /* HERO */
+  header.hero{
+    padding:90px 0 60px;
+    border-bottom:3px double var(--ink);
+    margin-bottom:8px;
+  }
+  .ledger-no{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    color:var(--brass);
+    text-transform:uppercase;
+  }
+  h1.title{
+    font-family:'Noto Serif Thai', serif;
+    font-weight:700;
+    font-size:clamp(34px, 5.5vw, 56px);
+    line-height:1.2;
+    margin:14px 0 10px;
+    color:var(--ink);
+  }
+  .subtitle{
+    font-family:'Noto Serif Thai', serif;
+    font-style:normal;
+    font-size:18px;
+    color:var(--forest);
+    max-width:60ch;
+  }
+  .hero-meta{
+    display:flex; gap:32px; margin-top:34px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; color:#5a5340;
+    flex-wrap:wrap;
+  }
+  .hero-meta div span{display:block; color:var(--ink); font-size:14px; margin-top:2px;}
+
+  /* TOC as ledger index */
+  nav.index{
+    margin:40px 0 70px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,0.25);
+  }
+  nav.index .index-head{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.15em; text-transform:uppercase;
+    padding:12px 20px; border-bottom:1px solid var(--line); color:var(--brass);
+  }
+  nav.index ol{list-style:none; margin:0; padding:0;}
+  nav.index li{border-bottom:1px dashed var(--line);}
+  nav.index li:last-child{border-bottom:none;}
+  nav.index a{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:13px 20px; text-decoration:none; color:var(--ink);
+    font-family:'Noto Serif Thai',serif; font-size:16px;
+    transition:background .2s, padding-left .2s;
+  }
+  nav.index a:hover{background:rgba(156,122,52,0.1); padding-left:26px;}
+  nav.index a .no{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--brass); margin-right:14px;
+  }
+  nav.index a .fill{flex:1; border-bottom:1px dotted var(--line); margin:0 10px; transform:translateY(-4px);}
+  nav.index a .pg{font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8a8266;}
+
+  /* SECTIONS */
+  section{padding:64px 0 10px; border-bottom:1px solid var(--line); scroll-margin-top:24px;}
+  section:last-of-type{border-bottom:none;}
+
+  .sec-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--brass); display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  }
+  .sec-eyebrow .num{
+    width:34px; height:34px; border:1px solid var(--brass);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; color:var(--brass); flex-shrink:0;
+  }
+  h2.sec-title{
+    font-family:'Noto Serif Thai', serif; font-weight:700;
+    font-size:clamp(24px,3.4vw,32px); margin:0 0 22px; color:var(--ink);
+  }
+  p.lead{font-size:17px; max-width:68ch; color:#3a352a;}
+  p{max-width:70ch;}
+
+  .callout{
+    border-left:3px solid var(--rust);
+    background:rgba(139,58,58,0.06);
+    padding:16px 22px; margin:22px 0; font-size:15px;
+  }
+  .callout b{color:var(--rust);}
+
+  /* checklist */
+  ul.checklist{list-style:none; margin:24px 0; padding:0; display:grid; gap:12px;}
+  ul.checklist li{
+    display:grid; grid-template-columns:26px 1fr; gap:14px; align-items:start;
+    background:rgba(255,255,255,0.35); border:1px solid var(--line); padding:14px 18px;
+  }
+  ul.checklist li::before{
+    content:"✓"; font-family:'IBM Plex Mono',monospace; color:var(--forest);
+    font-weight:600; font-size:15px; border:1px solid var(--forest);
+    width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  }
+  ul.checklist li b{color:var(--forest);}
+  ul.checklist li .sub{display:block; font-size:13.5px; color:#5a5340; margin-top:4px;}
+
+  /* moat grid */
+  .moat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin:26px 0 10px;}
+  .moat-card{
+    border:1px solid var(--line); background:rgba(255,255,255,0.3);
+    padding:20px 18px; position:relative;
+  }
+  .moat-card .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--brass); display:block; margin-bottom:8px;
+  }
+  .moat-card h4{margin:0 0 8px; font-family:'Noto Serif Thai',serif; font-size:17px;}
+  .moat-card p{font-size:14px; margin:0; color:#4a4636;}
+
+  .qnum{
+    display:grid; grid-template-columns:32px 1fr; gap:12px; margin:14px 0; align-items:baseline;
+  }
+  .qnum .q{font-family:'IBM Plex Mono',monospace; color:var(--brass); font-size:14px;}
+
+  /* Ledger worked example (signature element) */
+  .ledger-sheet{
+    margin:36px 0; background:var(--ink); color:var(--cream-text);
+    border:1px solid var(--ink); position:relative; overflow:hidden;
+  }
+  .ledger-sheet .sheet-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 24px; border-bottom:1px solid rgba(243,238,224,0.25);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--brass-light);
+  }
+  .sheet-body{padding:8px 24px 20px;}
+  .entry-row{
+    display:grid; grid-template-columns:1fr auto auto; gap:18px; align-items:baseline;
+    padding:11px 0; border-bottom:1px dashed rgba(243,238,224,0.18);
+    font-family:'IBM Plex Mono',monospace; font-size:14px;
+  }
+  .entry-row:last-child{border-bottom:none;}
+  .entry-row .label{font-family:'Noto Sans Thai',sans-serif; color:#d8d2bf; font-size:14.5px;}
+  .entry-row .op{color:var(--brass-light); text-align:right;}
+  .entry-row .val{text-align:right; color:var(--cream-text); font-weight:500; min-width:100px;}
+  .entry-row.total{margin-top:6px; padding-top:16px; border-top:2px solid var(--brass-light); border-bottom:none;}
+  .entry-row.total .label{color:var(--brass-light); font-weight:600;}
+  .entry-row.total .val{font-size:19px; color:#fff;}
+  .entry-row.result .val{color:#e8c887; font-size:20px;}
+
+  table.data-table{
+    width:100%; border-collapse:collapse; margin:24px 0; font-size:14.5px;
+  }
+  table.data-table th, table.data-table td{
+    border:1px solid var(--line); padding:10px 14px; text-align:right;
+  }
+  table.data-table th{
+    background:rgba(47,76,62,0.1); font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--forest); text-align:right;
+  }
+  table.data-table td:first-child, table.data-table th:first-child{text-align:left;}
+  table.data-table td.neg{color:var(--rust); font-family:'IBM Plex Mono',monospace;}
+  table.data-table td.pos{color:var(--forest); font-family:'IBM Plex Mono',monospace;}
+  table.data-table td.mono{font-family:'IBM Plex Mono',monospace;}
+
+  .formula{
+    font-family:'IBM Plex Mono',monospace; background:rgba(47,76,62,0.08);
+    border:1px solid var(--line); padding:14px 18px; margin:18px 0; font-size:14.5px;
+    color:var(--forest);
+  }
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:30px 0;}
+  @media(max-width:720px){.two-col{grid-template-columns:1fr;}}
+  .method-card{border:1px solid var(--line); padding:22px 24px; background:rgba(255,255,255,0.3);}
+  .method-card .m-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--brass); margin-bottom:10px; display:block;
+  }
+  .method-card h4{font-family:'Noto Serif Thai',serif; margin:0 0 12px; font-size:19px;}
+  .method-card ol{padding-left:20px; font-size:14.5px; margin:0;}
+  .method-card ol li{margin-bottom:6px;}
+
+  footer{
+    padding:60px 0 20px; text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8a8266; letter-spacing:.1em;
+  }
+
+  @media (max-width:600px){
+    .wrap{padding:0 18px 90px;}
+    header.hero{padding:56px 0 40px;}
+    .hero-meta{gap:20px;}
+  }
+
+  a:focus-visible, button:focus-visible{outline:2px solid var(--forest); outline-offset:3px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="ledger-no">Ledger No. 01 — Value Investing Field Notes</div>
+    <h1 class="title">กรอบการประเมินธุรกิจ<br>แบบ Warren Buffett</h1>
+    <p class="subtitle">บันทึกภาคสนามของนักลงทุนสายคุณค่า ว่าด้วยการหาป้อมปราการทางธุรกิจ คัดกรองด้วยตัวเลข และตีมูลค่าที่แท้จริงก่อนตัดสินใจซื้อ</p>
+    <div class="hero-meta">
+      <div>หลักการ<span>5</span></div>
+      <div>เกณฑ์คัดกรอง<span>6 ข้อ</span></div>
+      <div>วิธีตีมูลค่า<span>2 แบบ</span></div>
+      <div>ตัวอย่างคำนวณ<span>3 ชุด</span></div>
+    </div>
+  </header>
+
+  <nav class="index" aria-label="สารบัญ">
+    <div class="index-head">สารบัญ</div>
+    <ol>
+      <li><a href="#rule1"><span><span class="no">01</span>กฎข้อ 1 — ห้ามขาดทุน</span><span class="fill"></span><span class="pg">Rule #1</span></a></li>
+      <li><a href="#moat"><span><span class="no">02</span>ป้อมปราการทางธุรกิจ (MOAT)</span><span class="fill"></span><span class="pg">MOAT</span></a></li>
+      <li><a href="#screen"><span><span class="no">03</span>เกณฑ์คัดกรองธุรกิจ</span><span class="fill"></span><span class="pg">Checklist</span></a></li>
+      <li><a href="#value"><span><span class="no">04</span>วิธีตีราคาถูก-แพง</span><span class="fill"></span><span class="pg">Valuation</span></a></li>
+      <li><a href="#dcf"><span><span class="no">05</span>ประเมินมูลค่าหุ้น 10 ปี</span><span class="fill"></span><span class="pg">Worked Ex. A</span></a></li>
+      <li><a href="#perpetuity"><span><span class="no">06</span>Owner Earnings / Perpetuity</span><span class="fill"></span><span class="pg">Worked Ex. B</span></a></li>
+      <li><a href="#cfc"><span><span class="no">07</span>ตัวอย่างคำนวณ FCF จริง</span><span class="fill"></span><span class="pg">Worked Ex. C</span></a></li>
+      <li><a href="#financials"><span><span class="no">08</span>ตารางการเงินย้อนหลัง</span><span class="fill"></span><span class="pg">Financials</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- 01 RULE 1 -->
+  <section id="rule1">
+    <div class="sec-eyebrow"><span class="num">01</span>หลักการตั้งต้น</div>
+    <h2 class="sec-title">กฎข้อ 1 — ห้ามขาดทุน</h2>
+    <p class="lead">ความหมายคือ อะไรที่ทำให้เราขาดทุน เราจะไม่ทำ — เหมือนคำถามที่ว่า "ทำยังไงถึงจะสำเร็จ" คำตอบคือต้องรู้ก่อนว่า "ทำยังไงถึงล้มเหลว"</p>
+    <p>การลงทุนคือการรอ และซื้อในช่วงที่ตลาดให้ราคาไม่สะท้อนมาจากกำไรจริง เช่น ช่วง panic, event เฉพาะกิจ หรือ bearish market ที่กำไรบริษัทไม่ได้ตกตามราคาหุ้น หรือดูจาก P/E ที่ต่ำกว่าค่าเฉลี่ยของตัวเอง (P/E band) อย่างมีนัยสำคัญ</p>
+    <div class="callout"><b>ข้อควรจำ —</b> การรอ ไม่ใช่การอยู่เฉยๆ แต่คือรอด้วยการพัฒนาตัวเองและติดตามธุรกิจอยู่ตลอด (focus)</div>
+  </section>
+
+  <!-- 02 MOAT -->
+  <section id="moat">
+    <div class="sec-eyebrow"><span class="num">02</span>คุณภาพธุรกิจ</div>
+    <h2 class="sec-title">การค้นหาธุรกิจจากป้อมปราการ (MOAT)</h2>
+    <p class="lead">ก่อนดูตัวเลข ต้องหาก่อนว่าธุรกิจนี้มี "กำแพง" อะไรกันคู่แข่งไม่ให้แย่งลูกค้าไปได้ง่ายๆ</p>
+
+    <div class="moat-grid">
+      <div class="moat-card"><span class="tag">Network</span><h4>Social Network</h4><p>จำนวนคนพร้อมเข้ามาช่วยสร้าง engagement เข้ามาแล้วออกยาก</p></div>
+      <div class="moat-card"><span class="tag">Data</span><h4>ข้อมูล</h4><p>นำข้อมูลมาช่วยให้ผู้บริโภคสะดวกขึ้น จนยอมแชร์ข้อมูลให้ต่อเนื่อง</p></div>
+      <div class="moat-card"><span class="tag">Cost</span><h4>ความได้เปรียบด้านต้นทุน</h4><p>ผลิตหรือให้บริการได้ถูกกว่าคู่แข่งอย่างยั่งยืน</p></div>
+      <div class="moat-card"><span class="tag">Switching</span><h4>ต้นทุนการเปลี่ยนเจ้า</h4><p>ลูกค้าเปลี่ยนไปใช้เจ้าอื่นได้ยากหรือมีต้นทุนสูง</p></div>
+      <div class="moat-card"><span class="tag">Intangible</span><h4>สินทรัพย์ไม่มีตัวตน</h4><p>สิทธิบัตร ทรัพย์สินทางปัญญา หรือแบรนด์ (brand)</p></div>
+      <div class="moat-card"><span class="tag">Product</span><h4>ความแตกต่างของสินค้า</h4><p>สินค้าที่ลูกค้ารู้สึกว่าทดแทนกันไม่ได้</p></div>
+    </div>
+
+    <h4 style="font-family:'Noto Serif Thai',serif; margin-top:38px;">5 คำถามหลัก ก่อนเลือกธุรกิจ</h4>
+    <div class="qnum"><span class="q">Q1</span><span>ธุรกิจนั้นส่งมอบสินค้าหรือคุณค่าใดให้กับลูกค้า</span></div>
+    <div class="qnum"><span class="q">Q2</span><span>มีคนอื่นส่งมอบคุณค่านั้นด้วยหรือไม่</span></div>
+    <div class="qnum"><span class="q">Q3</span><span>ฉันเลือกที่จะรับคุณค่านั้นจากที่อื่นแทน ได้หรือไม่</span></div>
+    <div class="qnum"><span class="q">Q4</span><span>ทำไมเราถึงเลือกรับคุณค่านั้นจากที่นี่ แทนที่จะเป็นที่อื่น</span></div>
+    <div class="qnum"><span class="q">Q5</span><span>เหตุผลในข้อ 4 ยั่งยืนในระยะยาวหรือไม่</span></div>
+  </section>
+
+  <!-- 03 SCREEN -->
+  <section id="screen">
+    <div class="sec-eyebrow"><span class="num">03</span>การประเมินธุรกิจ</div>
+    <h2 class="sec-title">เกณฑ์คัดกรองธุรกิจด้วยตัวเลข</h2>
+    <p class="lead">ต้องผ่านความได้เปรียบทางการแข่งขันก่อน แล้วจึงเช็คสุขภาพการเงินด้วยเกณฑ์เหล่านี้:</p>
+
+    <ul class="checklist">
+      <li><div><b>EPS เติบโตสม่ำเสมอ 10 ปี</b><span class="sub">ไม่ใช่แค่โต แต่ต้องโตอย่างสม่ำเสมอตลอดวัฏจักร</span></div></li>
+      <li><div><b>ROE &gt; 15%</b><span class="sub">ต้องคู่กับยอดขายที่โตอย่างน้อย 10% และเช็ค ROA ประกอบ เผื่อ ROE สูงเพราะ Equity น้อยแต่หนี้เยอะ</span></div></li>
+      <li><div><b>ROA &gt; 7%</b><span class="sub">หรือโตสอดคล้องกับ ROE (Assets = Liabilities + Equity)</span></div></li>
+      <li><div><b>หนี้ระยะยาว ≤ 5 เท่าของ net income</b><span class="sub">ไม่ใช้ D/E ratio เพราะธุรกิจยังกู้เพื่อลงทุนได้ แต่ต้องชำระคืนไหว — เรากำลังซื้อธุรกิจ ไม่ใช่ซื้อบริษัทใกล้เจ๊ง</span></div></li>
+      <li><div><b>Interest Coverage Ratio &gt; 3</b><span class="sub">EBIT ÷ Interest Expense — คาดหวังให้ธุรกิจอยู่รอดได้อย่างน้อย 3 ปีในช่วงตลาดขาลง</span></div></li>
+      <li><div><b>กระแสเงินสดอิสระ (FCF/share) เป็นบวก ≥ 5 ใน 10 ปี</b><span class="sub">เทียบกับ EPS แล้วควรเป็นบวกด้วย ติดลบได้บ้างหากมาจากการลงทุนเพิ่มหรือจ่ายปันผล</span></div></li>
+    </ul>
+
+    <div class="callout"><b>เช็คสุดท้าย —</b> ธุรกิจต้องมีอำนาจต่อรองราคา หากขึ้นราคาได้โดยไม่เสียลูกค้าให้คู่แข่ง แสดงว่าเป็นธุรกิจคุณภาพสูงมาก</div>
+  </section>
+
+  <!-- 04 VALUE -->
+  <section id="value">
+    <div class="sec-eyebrow"><span class="num">04</span>ถูกหรือแพง</div>
+    <h2 class="sec-title">วิธีคิดว่าหุ้นถูกหรือแพง</h2>
+    <p class="lead">ดูจาก EPS และ P/E เป็นหลัก โดยกลับด้าน P/E เพื่อดูผลตอบแทนต่อเงินลงทุนทุก 100 บาท</p>
+    <div class="formula">Earnings Yield = 1 / P/E × 100</div>
+    <p>ยิ่งราคาสูงขึ้นเมื่อเทียบกับกำไร กำไรต่อเงินลงทุนก็ยิ่งลดลง — ตัวเลขนี้ใช้เทียบกับพันธบัตรหรือทางเลือกลงทุนอื่นได้ตรงไปตรงมา</p>
+
+    <div class="two-col">
+      <div class="method-card">
+        <span class="m-label">Method A</span>
+        <h4>Growth-based (คาดการณ์ 10 ปี)</h4>
+        <ol>
+          <li>หาอัตราเติบโตสะสมต่อปี (CAGR) ของ EPS</li>
+          <li>ประเมิน EPS ล่วงหน้า 10 ปี</li>
+          <li>ประเมินราคาหุ้นในอีก 10 ปี (× P/E เฉลี่ย)</li>
+          <li>คิดลดกลับเป็นราคาปัจจุบันตามผลตอบแทนที่ต้องการ</li>
+          <li>หัก Margin of Safety เพิ่มอีกชั้น</li>
+        </ol>
+      </div>
+      <div class="method-card">
+        <span class="m-label">Method B</span>
+        <h4>Perpetuity (Owner Earnings)</h4>
+        <ol>
+          <li>คำนวณ Owner Earnings ต่อหุ้น</li>
+          <li>เลือก Long-term Yield ที่ต้องการ (เช่น พันธบัตรระยะยาว)</li>
+          <li>Intrinsic Value = Owner Earnings ÷ Long-term Yield</li>
+          <li>เทียบกับราคาตลาด — ถ้าต่ำกว่า = มี Margin of Safety</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 WORKED EXAMPLE A -->
+  <section id="dcf">
+    <div class="sec-eyebrow"><span class="num">05</span>ตัวอย่างคำนวณ A</div>
+    <h2 class="sec-title">ประเมินราคาหุ้นล่วงหน้า 10 ปี</h2>
+    <p class="lead">สมมุติผ่านเกณฑ์คัดกรองธุรกิจมาแล้วทั้งหมด (EPS โตทุกปี, FCF เป็นบวกเกิน 5/10 ปี)</p>
+
+    <div class="ledger-sheet">
+      <div class="sheet-head"><span>Worked Example — 10-Year Intrinsic Value</span><span>Ledger A</span></div>
+      <div class="sheet-body">
+        <div class="entry-row">
+          <span class="label">EPS อดีต (2015)</span><span class="op">→</span><span class="val">0.88</span>
+        </div>
+        <div class="entry-row">
+          <span class="label">EPS ปัจจุบัน (2025)</span><span class="op">→</span><span class="val">2.98</span>
+        </div>
+        <div class="entry-row">
+          <span class="label">จำนวนปี</span><span class="op">→</span><span class="val">9</span>
+        </div>
+        <div class="entry-row total">
+          <span class="label">อัตราเติบโตสะสมต่อปี (CAGR)</span><span class="op"></span><span class="val">14.51%</span>
+        </div>
+
+        <div class="entry-row" style="margin-top:18px;">
+          <span class="label">EPS ปัจจุบัน × (1+g)^10</span><span class="op">→</span><span class="val">2.98 × (1.1451)^10</span>
+        </div>
+        <div class="entry-row result">
+          <span class="label">EPS คาดการณ์ อีก 10 ปีข้างหน้า</span><span class="op"></span><span class="val">11.55</span>
+        </div>
+
+        <div class="entry-row" style="margin-top:18px;">
+          <span class="label">P/E เฉลี่ยของบริษัท</span><span class="op">×</span><span class="val">19</span>
+        </div>
+        <div class="entry-row">
+          <span class="label">ราคาหุ้นคาดการณ์ ปีที่ 10 = EPS ปีที่ 10 × P/E เฉลี่ย</span><span class="op">→</span><span class="val">11.55 × 19</span>
+        </div>
+        <div class="entry-row result">
+          <span class="label">ราคาหุ้นคาดการณ์ ปีที่ 10</span><span class="op"></span><span class="val">219.45</span>
+        </div>
+
+        <div class="entry-row" style="margin-top:18px;">
+          <span class="label">ราคาเป้าหมายวันนี้ = ราคาปีที่ 10 ÷ (1+ผลตอบแทนคาดหวัง)^จำนวนปี</span><span class="op">→</span><span class="val">219.45 ÷ (1.20)^10</span>
+        </div>
+        <div class="entry-row result">
+          <span class="label">ราคาหุ้นเป้าหมายวันนี้</span><span class="op"></span><span class="val">35.44</span>
+        </div>
+
+        <div class="entry-row" style="margin-top:18px;">
+          <span class="label">หัก Margin of Safety 15%</span><span class="op">−</span><span class="val">15%</span>
+        </div>
+        <div class="entry-row total">
+          <span class="label">ราคาที่สนใจซื้อจริง</span><span class="op"></span><span class="val">30.12</span>
+        </div>
+      </div>
+    </div>
+
+    <p>ความหมาย: หากซื้อได้ที่ <b>35.44</b> บาท และถือ 10 ปีจนราคาไปแตะ <b>219.45</b> บาทตามคาด จะได้ผลตอบแทนทบต้น <b>20% ต่อปี</b> — ส่วน Margin of Safety เป็นตัวเลขอ้างอิงตามสถานการณ์ตลาด ไม่ใช่สูตรตายตัว เพราะแม้บริษัทจะดีแค่ไหน เศรษฐกิจโดยรวมที่แย่ก็อาจทำให้ผลลัพธ์แย่กว่าที่คาดได้เสมอ</p>
+  </section>
+
+  <!-- 06 WORKED EXAMPLE B -->
+  <section id="perpetuity">
+    <div class="sec-eyebrow"><span class="num">06</span>ตัวอย่างคำนวณ B</div>
+    <h2 class="sec-title">Owner Earnings &amp; การประเมินมูลค่าหุ้นตลอดไป</h2>
+    <p class="lead">Buffett เน้นที่กระแสเงินสดอิสระ หรือ "กำไรของผู้ถือหุ้น" (Owner's Earnings) มากกว่ากำไรทางบัญชี</p>
+
+    <div class="formula">Owner Earnings (ต่อหุ้น) = Net Income + D&amp;A − Capex<br>Intrinsic Value = Owner Earnings ÷ Long-Term Yield</div>
+
+    <div class="ledger-sheet">
+      <div class="sheet-head"><span>Worked Example — Perpetuity Valuation</span><span>Ledger B</span></div>
+      <div class="sheet-body">
+        <div class="entry-row"><span class="label">Net Income (ต่อหุ้น)</span><span class="op">+</span><span class="val">5.00</span></div>
+        <div class="entry-row"><span class="label">Depreciation &amp; Amortization</span><span class="op">+</span><span class="val">2.00</span></div>
+        <div class="entry-row"><span class="label">Capex</span><span class="op">−</span><span class="val">1.50</span></div>
+        <div class="entry-row total"><span class="label">Owner Earnings ต่อหุ้น</span><span class="op"></span><span class="val">5.50</span></div>
+
+        <div class="entry-row" style="margin-top:18px;"><span class="label">Long-Term Bond Yield</span><span class="op">÷</span><span class="val">4.0%</span></div>
+        <div class="entry-row result"><span class="label">Intrinsic Value ต่อหุ้น</span><span class="op"></span><span class="val">137.50</span></div>
+      </div>
+    </div>
+
+    <p>ถ้าซื้อที่ 137.50 บาท และ Owner Earnings คงที่ที่ 5.50 บาทต่อปี จะได้ผลตอบแทน 4.0% ต่อปี (5.50 ÷ 137.50) หากราคาตลาดจริงอยู่ที่ <b>100 บาท</b> ซึ่งต่ำกว่ามูลค่าที่แท้จริง ก็ถือว่ามี Margin of Safety ที่น่าสนใจในมุมมอง Value Investor</p>
+    <div class="callout"><b>ทางลัด —</b> บางครั้งอาจใช้ EV/EBITDA แทนได้ โดย Yield ≈ EBITDA ÷ EV (คือส่วนกลับของ EV/EBITDA)</div>
+  </section>
+
+  <!-- 07 FCF EXAMPLE -->
+  <section id="cfc">
+    <div class="sec-eyebrow"><span class="num">07</span>ตัวอย่างคำนวณ C</div>
+    <h2 class="sec-title">คำนวณกระแสเงินสดอิสระ (FCF) จริง</h2>
+    <p class="lead">FCF = Operating Cash Flow − Net Capex — ตีความว่าการลงทุนเพิ่มเป็นค่าบวกในสูตร</p>
+    <div class="formula">FCF = Operating Cash Flow − Net Capex</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>ปี</th><th>Operating Cash Flow</th><th>Net Capex</th><th>FCF</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2022</td><td class="mono">16,139</td><td class="mono">13,127</td><td class="mono pos">3,012</td></tr>
+        <tr><td>2023</td><td class="mono">22,486</td><td class="mono">13,072</td><td class="mono pos">9,414</td></tr>
+        <tr><td>2024</td><td class="mono">10,718</td><td class="mono">15,892</td><td class="mono neg">−5,174</td></tr>
+      </tbody>
+    </table>
+    <p>ปี 2023 มีหนี้น้อยกว่าสินทรัพย์หมุนเวียน จึงได้ FCF เป็นบวกชัดเจน ส่วนปี 2024 ที่ติดลบ ต้องแยกให้ออกว่าเกิดจากการลงทุนขยายกิจการ (ยังโอเค) หรือจากปัญหาการดำเนินงานจริง (สัญญาณเตือน)</p>
+  </section>
+
+  <!-- 08 FINANCIAL TABLES -->
+  <section id="financials">
+    <div class="sec-eyebrow"><span class="num">08</span>ตารางบันทึกการเงิน</div>
+    <h2 class="sec-title">ตารางการเงินย้อนหลัง 5 ปี + TTM</h2>
+    <p class="lead">ตัวเลขด้านล่างเป็น <b>ตัวอย่างสมมติ</b> (หน่วย: ล้านบาท) สำหรับสาธิตวิธีอ่านข้อมูล — แทนที่ด้วยตัวเลขจริงของบริษัทที่กำลังพิจารณา แล้วใช้คู่กับเกณฑ์คัดกรองในหมวด 03</p>
+
+    <h4 style="font-family:'Noto Serif Thai',serif; margin:36px 0 4px; font-size:18px;">8.1 Income Statement</h4>
+    <p style="font-size:14px; color:#5a5340; margin-top:0;">รายได้และกำไรตลอดวัฏจักร 5 ปีล่าสุด + TTM (หน่วย: ล้านบาท)</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>รายการ</th><th>TTM</th><th>FY1</th><th>FY2</th><th>FY3</th><th>FY4</th><th>FY5</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Revenue</td><td class="mono">1,720</td><td class="mono">1,580</td><td class="mono">1,400</td><td class="mono">1,250</td><td class="mono">1,120</td><td class="mono">1,000</td></tr>
+        <tr><td>Gross Profit</td><td class="mono">817</td><td class="mono">743</td><td class="mono">651</td><td class="mono">575</td><td class="mono">510</td><td class="mono">450</td></tr>
+        <tr><td>Operating Income</td><td class="mono">421</td><td class="mono">379</td><td class="mono">329</td><td class="mono">288</td><td class="mono">252</td><td class="mono">220</td></tr>
+        <tr><td>Net Income</td><td class="mono">289</td><td class="mono">259</td><td class="mono">224</td><td class="mono">195</td><td class="mono">171</td><td class="mono">150</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>วิธีดู —</b> Revenue ควรโตขึ้นทุกปีจาก FY5 → TTM ไม่มีปีไหนหดตัว ในตัวอย่างนี้โตจาก 1,000 → 1,720 ล้านบาท ใน 5 ปี คิดเป็น CAGR = (1,720/1,000)^(1/5) − 1 ≈ <b>11.5% ต่อปี</b> — ควรเช็คว่า Net Income โตในอัตราใกล้เคียงหรือเร็วกว่า Revenue (ในตัวอย่าง Net Income โตจาก 150 → 289 คิดเป็น CAGR ≈ 14% เร็วกว่า Revenue แปลว่าธุรกิจมี operating leverage ที่ดี)</div>
+
+    <h4 style="font-family:'Noto Serif Thai',serif; margin:36px 0 4px; font-size:18px;">8.2 Profit Margins</h4>
+    <p style="font-size:14px; color:#5a5340; margin-top:0;">อัตรากำไรแต่ละชั้น เพื่อดูว่าคุมต้นทุนได้สม่ำเสมอหรือไม่</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>รายการ</th><th>TTM</th><th>FY1</th><th>FY2</th><th>FY3</th><th>FY4</th><th>FY5</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Revenue</td><td class="mono">1,720</td><td class="mono">1,580</td><td class="mono">1,400</td><td class="mono">1,250</td><td class="mono">1,120</td><td class="mono">1,000</td></tr>
+        <tr><td>GPM</td><td class="mono">47.5%</td><td class="mono">47.0%</td><td class="mono">46.5%</td><td class="mono">46.0%</td><td class="mono">45.5%</td><td class="mono">45.0%</td></tr>
+        <tr><td>OPM</td><td class="mono">24.5%</td><td class="mono">24.0%</td><td class="mono">23.5%</td><td class="mono">23.0%</td><td class="mono">22.5%</td><td class="mono">22.0%</td></tr>
+        <tr><td>NPM</td><td class="mono">16.8%</td><td class="mono">16.4%</td><td class="mono">16.0%</td><td class="mono">15.6%</td><td class="mono">15.3%</td><td class="mono">15.0%</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>วิธีดู —</b> ทั้ง GPM, OPM และ NPM ควรทรงตัวหรือขยับขึ้นทีละน้อยทุกปี (ไม่จำเป็นต้องกระโดด) แบบในตัวอย่างที่ไล่จาก FY5 → TTM อย่างสม่ำเสมอ — ถ้าเห็น margin หดตัวต่อเนื่องหลายปีติดกัน แปลว่าธุรกิจอาจกำลังเสีย pricing power หรือต้นทุนคุมไม่อยู่ ต้องกลับไปเช็ค MOAT ในหมวด 02 ว่ายังแข็งแรงอยู่หรือไม่</div>
+
+    <h4 style="font-family:'Noto Serif Thai',serif; margin:36px 0 4px; font-size:18px;">8.3 Cash Flow and Capital Allocation</h4>
+    <p style="font-size:14px; color:#5a5340; margin-top:0;">ดูว่ากระแสเงินสดถูกจัดสรรไปทางไหน ซื้อกิจการ ซื้อหุ้นคืน หรือจ่ายปันผล (หน่วย: ล้านบาท)</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>รายการ</th><th>TTM</th><th>FY1</th><th>FY2</th><th>FY3</th><th>FY4</th><th>FY5</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CFO</td><td class="mono">380</td><td class="mono">340</td><td class="mono">300</td><td class="mono">265</td><td class="mono">235</td><td class="mono">205</td></tr>
+        <tr><td>CAPEX</td><td class="mono">90</td><td class="mono">85</td><td class="mono">78</td><td class="mono">70</td><td class="mono">65</td><td class="mono">60</td></tr>
+        <tr><td>Free Cash Flow</td><td class="mono pos">290</td><td class="mono pos">255</td><td class="mono pos">222</td><td class="mono pos">195</td><td class="mono pos">170</td><td class="mono pos">145</td></tr>
+        <tr><td>Cash Acquisition <span style="font-weight:400; color:#8a8266; font-size:12px;">(Payments for Business Acquisitions)</span></td><td class="mono neg">−50</td><td class="mono neg">−20</td><td class="mono">0</td><td class="mono neg">−50</td><td class="mono">0</td><td class="mono neg">−15</td></tr>
+        <tr><td>Stock Repurchase <span style="font-weight:400; color:#8a8266; font-size:12px;">(Repurchase of Common Stock)</span></td><td class="mono neg">−120</td><td class="mono neg">−100</td><td class="mono neg">−90</td><td class="mono neg">−75</td><td class="mono neg">−60</td><td class="mono neg">−50</td></tr>
+        <tr><td>Dividend Paid <span style="font-weight:400; color:#8a8266; font-size:12px;">(Common Dividends Paid)</span></td><td class="mono neg">−60</td><td class="mono neg">−55</td><td class="mono neg">−50</td><td class="mono neg">−45</td><td class="mono neg">−40</td><td class="mono neg">−35</td></tr>
+        <tr style="background:rgba(47,76,62,0.08);"><td><b>เหลือกำไรหลังจัดสรรทั้งหมด</b></td><td class="mono pos"><b>60</b></td><td class="mono pos"><b>80</b></td><td class="mono pos"><b>82</b></td><td class="mono pos"><b>25</b></td><td class="mono pos"><b>70</b></td><td class="mono pos"><b>45</b></td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>วิธีดู —</b> FCF (= CFO − CAPEX) ต้องเป็นบวกทุกปี แล้วเมื่อหักเงินที่จ่ายออกไปทั้งหมด (ซื้อกิจการ + ซื้อหุ้นคืน + ปันผล) บรรทัดสุดท้ายควรยังเหลือเป็นบวกเสมอ — หากปีไหนติดลบ แปลว่าบริษัทกำลังจัดสรรเงินเกินกว่าที่หาได้ (อาจต้องกู้เพิ่มหรือลดเงินสดสำรอง) ซึ่งเป็นสัญญาณให้ต้องเข้าไปดูรายละเอียดเพิ่มเติมว่าเกิดจากการลงทุนพิเศษ (เช่น M&amp;A ก้อนใหญ่ในปี FY3 ที่ทำให้กำไรคงเหลือลดลงเหลือเพียง 25) หรือเป็นปัญหาต่อเนื่อง</div>
+  </section>
+
+  <footer>สมุดบันทึกส่วนตัว — สรุปจากหลักการลงทุนแบบ Value Investing</footer>
+</div>
+</body>
+</html>
