@@ -1,74 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Thesis</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Thesis Library</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
+  :root {
+    --bg: #F4F1EA;
+    --ink: #2B2824;
+    --ink-soft: #6B655C;
+    --line: #DDD6C9;
+    --accent: #D97757;
+    --card: #FFFEFC;
+  }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+  * { box-sizing: border-box; }
 
-        li {
-            margin: 15px 0;
-        }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 80px 24px;
+  }
 
-        a {
-            display: block;
-            padding: 15px 20px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #0d6efd;
-            font-size: 18px;
-            transition: all 0.2s ease;
-        }
+  main { width: 100%; max-width: 640px; }
 
-        a:hover {
-            background: #0d6efd;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-    </style>
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1.1;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0 0 48px;
+  }
+
+  ul { list-style: none; padding: 0; margin: 0; }
+
+  li {
+    border-top: 1px solid var(--line);
+  }
+  li:last-child { border-bottom: 1px solid var(--line); }
+
+  a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 24px 4px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: padding-left 0.25s ease, color 0.25s ease;
+  }
+
+  a:hover {
+    padding-left: 12px;
+    color: var(--accent);
+  }
+
+  .doc-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .doc-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  a:hover .doc-ticker { color: var(--accent); }
+
+  footer {
+    margin-top: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+</style>
 </head>
 <body>
+<main>
+  <div class="eyebrow">Research Archive</div>
+  <h1>Investment Thesis</h1>
+  <p class="sub">Deep dives and frameworks — quality compounders, moats, and the occasional cyclical.</p>
 
-    <h1>Investment Thesis</h1>
+  <ul>
+    <li>
+      <a href="value-investing-framework-2.html">
+        <span class="doc-title">Value Investing Framework</span>
+        <span class="doc-ticker">FRAMEWORK</span>
+      </a>
+    </li>
+    <li>
+      <a href="mastercard-investment-thesis-1.html">
+        <span class="doc-title">Mastercard</span>
+        <span class="doc-ticker">MA</span>
+      </a>
+    </li>
+    <li>
+      <a href="seagate-stx-investment-thesis.html">
+        <span class="doc-title">Seagate Technology</span>
+        <span class="doc-ticker">STX</span>
+      </a>
+    </li>
+    <li>
+      <a href="uber_financial_report.html">
+        <span class="doc-title">Uber Financial Report</span>
+        <span class="doc-ticker">UBER</span>
+      </a>
+    </li>
+  </ul>
 
-    <ul>
-        <li>
-            <a href="mastercard-investment-thesis-1.html">
-                Mastercard (MA) Investment Thesis
-            </a>
-        </li>
-        <li>
-            <a href="seagate-stx-investment-thesis.html">
-                Seagate (STX) Investment Thesis
-            </a>
-        </li>
-        <li>
-            <a href="uber_financial_report.html">
-                Uber Financial Report 
-            </a>
-        </li>
-    </ul>
-
+  <footer>UPDATED JULY 2026</footer>
+</main>
 </body>
 </html>
