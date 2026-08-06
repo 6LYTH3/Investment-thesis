@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Framework — Compounding Machines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3EC;
+    --paper-dim:#EFEADF;
+    --ink:#1B1B18;
+    --ink-soft:#5B5A52;
+    --line:#DDD6C6;
+    --teal:#1F5E52;
+    --teal-dim:#E6EEEC;
+    --gold:#B8862B;
+    --gold-dim:#F3E9D2;
+    --red:#A3453A;
+    --red-dim:#F3E3DF;
+    --blue:#5C87A8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold-dim); color:var(--ink);}
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:26px; height:1px;
+    background:var(--teal);
+    display:inline-block;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(40px, 6.4vw, 68px);
+    line-height:1.03;
+    letter-spacing:-0.01em;
+    max-width:780px;
+  }
+  h1.title em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--teal);
+  }
+  .lede{
+    margin-top:26px;
+    max-width:600px;
+    font-size:18px;
+    color:var(--ink-soft);
+  }
+  .lede strong{color:var(--ink); font-weight:600;}
+
+  /* signature compounding curve */
+  .signature{
+    margin-top:56px;
+    height:150px;
+    position:relative;
+  }
+  .signature svg{width:100%; height:100%; overflow:visible;}
+  .sig-caption{
+    display:flex;
+    justify-content:space-between;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:10px;
+    letter-spacing:.02em;
+  }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{
+    padding:64px 0;
+    border-top:1px solid var(--line);
+  }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:36px;
+    flex-wrap:wrap;
+  }
+  .section-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:.1em;
+  }
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(26px, 3.6vw, 36px);
+    letter-spacing:-.01em;
+  }
+  .section-intro{
+    max-width:640px;
+    color:var(--ink-soft);
+    font-size:16px;
+    margin-bottom:32px;
+  }
+
+  /* ---------- OVERVIEW PILLARS ---------- */
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .pillar{
+    background:var(--paper);
+    padding:26px 22px;
+  }
+  .pillar h3{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .pillar h3 .dot{
+    width:7px; height:7px;
+    background:var(--teal);
+    display:inline-block;
+    border-radius:1px;
+    transform:rotate(45deg);
+  }
+  .pillar ol{
+    list-style:none;
+    counter-reset:p;
+    display:flex; flex-direction:column; gap:9px;
+  }
+  .pillar li{
+    counter-increment:p;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    display:flex;
+    gap:10px;
+  }
+  .pillar li::before{
+    content:counter(p);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--teal);
+    min-width:16px;
+  }
+
+  /* ---------- ATTRIBUTES (attractive/unattractive) ---------- */
+  .attr-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  @media(max-width:760px){ .attr-grid{grid-template-columns:1fr;} .pillars{grid-template-columns:1fr;} }
+
+  .attr-col-head{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding-bottom:12px;
+    margin-bottom:20px;
+    border-bottom:2px solid var(--ink);
+    display:flex;
+    justify-content:space-between;
+  }
+  .attr-col-head.good{color:var(--teal); border-color:var(--teal);}
+  .attr-col-head.bad{color:var(--red); border-color:var(--red);}
+
+  .attr-item{margin-bottom:22px;}
+  .attr-item h4{
+    font-size:15px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:6px;
+  }
+  .badge{
+    width:18px; height:18px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    color:#fff;
+    flex:none;
+  }
+  .badge.good{background:var(--teal);}
+  .badge.bad{background:var(--red);}
+  .attr-item p{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    padding-left:26px;
+  }
+
+  /* ---------- CASE STUDY (chart comparisons) ---------- */
+  .case{
+    border:1px solid var(--line);
+    background:var(--paper-dim);
+    padding:28px;
+    margin-bottom:20px;
+  }
+  .case-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .case-metric{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .case-pair{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media(max-width:640px){ .case-pair{grid-template-columns:1fr;} }
+  .case-side h5{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:2px;
+  }
+  .case-side .tag{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    padding:2px 7px;
+    border-radius:3px;
+    display:inline-block;
+    margin-bottom:10px;
+  }
+  .tag.compounder{background:var(--teal-dim); color:var(--teal);}
+  .tag.not{background:var(--red-dim); color:var(--red);}
+  .bars{
+    display:flex;
+    align-items:flex-end;
+    gap:2px;
+    height:70px;
+  }
+  .bars.compounder div{background:var(--teal);}
+  .bars.not div{background:var(--red); opacity:.85;}
+  .bars div{flex:1; min-width:2px; border-radius:1px 1px 0 0;}
+  .case-note{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+  }
+
+  /* ---------- TEMPERAMENT ---------- */
+  .temp-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  .temp-list{list-style:none; display:flex; flex-direction:column; gap:14px;}
+  .temp-list li{
+    font-size:14.5px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .temp-list li::before{flex:none; margin-top:2px; font-size:13px;}
+  .temp-list.good li::before{content:"↑"; color:var(--teal); font-weight:700;}
+  .temp-list.bad li::before{content:"↓"; color:var(--red); font-weight:700;}
+
+  /* ---------- INTRINSIC VALUE ---------- */
+  .iv-flow{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-bottom:36px;
+  }
+  .iv-node{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    padding:12px 16px;
+    background:var(--paper-dim);
+    border:1px solid var(--line);
+    flex:1;
+    min-width:150px;
+  }
+  .iv-arrow{color:var(--ink-soft); font-size:16px;}
+  .drivers{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  @media(max-width:700px){.drivers{grid-template-columns:1fr;}}
+  .driver{
+    background:var(--paper);
+    padding:22px;
+    text-align:left;
+  }
+  .driver .check{color:var(--teal); font-size:16px; margin-bottom:8px; display:block;}
+  .driver h4{font-size:14.5px; font-weight:600;}
+
+  /* ---------- PORTFOLIO MANAGEMENT (buy/sell) ---------- */
+  .rules{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+  }
+  @media(max-width:700px){.rules{grid-template-columns:1fr;}}
+  .rule-block h3{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    margin-bottom:16px;
+    font-weight:600;
+  }
+  .rule-list{list-style:none; display:flex; flex-direction:column; gap:12px;}
+  .rule-list li{
+    font-size:14.5px;
+    display:flex;
+    gap:10px;
+    padding:12px 14px;
+    background:var(--paper-dim);
+    border-left:3px solid var(--teal);
+  }
+  .rule-list li.no{border-left-color:var(--red);}
+  .rule-list li .mark{font-weight:700; flex:none;}
+  .rule-list li.yes .mark{color:var(--teal);}
+  .rule-list li.no .mark{color:var(--red);}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:40px 0 70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  footer p{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.03em;
+  }
+
+  @media(max-width:600px){
+    .wrap{padding:0 20px;}
+    .hero{padding:56px 0 40px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="eyebrow">Investment Framework</div>
+    <h1 class="title">การเป็นเจ้าของ<br><em>เครื่องจักรทบต้น</em> ที่ดีที่สุด</h1>
+    <p class="lede">ซื้อ ถือ และดูแลพอร์ตที่ประกอบด้วย <strong>compounding machines</strong> ด้วยวินัยและมุมมองระยะยาว — ไม่เก็งกำไร ไม่พนัน และไม่ลงทุนเพราะความกลัว, FOMO หรือกระแส สามจุดโฟกัสหลักคือการเลือกหุ้นคุณภาพสูง อารมณ์การลงทุนที่เหมาะสม และการบริหารพอร์ตอย่างรอบคอบ</p>
+
+    <div class="signature">
+      <svg viewBox="0 0 800 130" preserveAspectRatio="none">
+        <!-- faint unattractive path -->
+        <polyline points="0,95 60,90 120,100 180,80 240,92 300,60 360,75 420,55 480,65 540,40 600,58 660,35 720,45 800,20"
+          fill="none" stroke="#C9645C" stroke-width="1.6" stroke-dasharray="3 4" opacity="0.55"/>
+        <!-- compounding curve -->
+        <path d="M0,118 C 150,112 260,108 340,92 C 420,76 460,55 520,40 C 590,22 680,10 800,2"
+          fill="none" stroke="#1F5E52" stroke-width="2.6"/>
+        <circle cx="800" cy="2" r="4.5" fill="#1F5E52"/>
+      </svg>
+      <div class="sig-caption">
+        <span>ปี 1</span>
+        <span style="color:#1F5E52;">— เครื่องจักรทบต้น (compounding) &nbsp;·&nbsp; — ไม่ใช่ (dashed)</span>
+        <span>ปี 25+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 01 OVERVIEW / PILLARS ============ -->
+  <section id="overview">
+    <div class="section-head">
+      <div>
+        <div class="section-num">01 — ภาพรวม</div>
+        <h2>สามเสาหลักของกรอบการลงทุน</h2>
+      </div>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <h3><span class="dot"></span>Stock Selection</h3>
+        <ol>
+          <li>Monopoly</li>
+          <li>Pricing Power</li>
+          <li>Operating Leverage</li>
+          <li>Organic Growth</li>
+          <li>Capital Light</li>
+          <li>Smart Capital Allocation</li>
+        </ol>
+      </div>
+      <div class="pillar">
+        <h3><span class="dot"></span>Temperament</h3>
+        <ol>
+          <li>Disciplined</li>
+          <li>Unemotional</li>
+          <li>Patient</li>
+          <li>Long Term Focused</li>
+        </ol>
+      </div>
+      <div class="pillar">
+        <h3><span class="dot"></span>Portfolio Management</h3>
+        <ol>
+          <li>Smart Position Sizing</li>
+          <li>Specific Buy Criteria</li>
+          <li>Specific Sell Criteria</li>
+          <li>Intrinsic Value Estimates</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 COMPOUNDING MACHINES ============ -->
+  <section id="compounders">
+    <div class="section-head">
+      <div>
+        <div class="section-num">02 — Stock Selection</div>
+        <h2>Compounding Machines</h2>
+      </div>
+    </div>
+    <p class="section-intro">คุณสมบัติที่ทำให้ธุรกิจน่าสนใจในระยะยาว เทียบกับสัญญาณเตือนที่บ่งบอกว่าธุรกิจไม่ใช่เครื่องจักรทบต้น</p>
+
+    <div class="attr-grid">
+      <div>
+        <div class="attr-col-head good">น่าสนใจ <span>ATTRACTIVE</span></div>
+
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Monopoly</h4>
+          <p>ส่วนแบ่งตลาดสูงในอุตสาหกรรมที่กระจุกตัว มีระบบจัดจำหน่าย แบรนด์ หรือฐานผู้ใช้ที่ฝังลึก และมี barrier to entry สูง</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Pricing Power</h4>
+          <p>มีประวัติขึ้นราคาสูงกว่าอัตราเงินเฟ้อ มี value เผื่อสำหรับขึ้นราคาในอนาคต และขึ้นราคาได้โดยลูกค้าต่อต้านน้อย</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Operating Leverage</h4>
+          <p>รายได้ที่เพิ่มขึ้นแต่ละดอลลาร์ช่วยเพิ่มมาร์จิ้น และยังมี TAM ขนาดใหญ่ให้ขยายต่อได้อีกไกล</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Organic Growth</h4>
+          <p>ไม่พึ่งพาการควบรวมกิจการเพื่อเติบโต เติบโตจากราคาและปริมาณ และสร้างผลิตภัณฑ์เองจากภายใน</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Capital Light</h4>
+          <p>ต้นทุนคงที่ต่ำ ใช้ R&D และ CAPEX ในสัดส่วนต่ำเมื่อเทียบกับรายได้</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge good">↑</span>Smart Capital Allocation</h4>
+          <p>ใช้เงินสดส่วนเกินไปกับการซื้อหุ้นคืน จ่ายเงินปันผล และการควบรวมกิจการขนาดเล็กที่ต่อยอดธุรกิจหลัก</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="attr-col-head bad">ไม่น่าสนใจ <span>UNATTRACTIVE</span></div>
+
+        <div class="attr-item">
+          <h4><span class="badge bad">↓</span>Risky Reinvestment</h4>
+          <p>ใช้ CAPEX หรือ R&D สูงโดยผลตอบแทนคาดเดาไม่ได้ หรือทุ่มเงินกับโปรเจกต์เสี่ยงสูงแบบ moonshot</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge bad">↓</span>Undisciplined Use Of Cash Flow</h4>
+          <p>ให้ค่าตอบแทนพนักงาน/ผู้บริหารสูงเกินไป ใช้จ่ายฟุ่มเฟือยกับออฟฟิศหรืองานเลี้ยง และไม่ยอมคืนเงินสดส่วนเกินให้ผู้ถือหุ้น</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge bad">↓</span>Unpredictable Cash Flows</h4>
+          <p>กระแสเงินสดอ่อนไหวต่อภาวะเศรษฐกิจ อยู่ในอุตสาหกรรมที่ผันผวนตามวัฏจักร หรือขายสินค้าฟุ่มเฟือย/สินค้าคงทนที่ผู้บริโภคเลื่อนซื้อได้</p>
+        </div>
+        <div class="attr-item">
+          <h4><span class="badge bad">↓</span>Dual Class Share Structure</h4>
+          <p>เจ้าของมีสิทธิ์โหวตไม่สมส่วนกับสัดส่วนหุ้นที่ถือ และไม่ต้องรับผิดชอบต่อผู้ถือหุ้นส่วนใหญ่</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 CASE STUDIES ============ -->
+  <section id="examples">
+    <div class="section-head">
+      <div>
+        <div class="section-num">03 — ตัวอย่างจริง</div>
+        <h2>Compounding Machine Examples</h2>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-top"><span class="case-metric">Revenue, 1985–2023</span></div>
+      <div class="case-pair">
+        <div class="case-side">
+          <h5>Costco</h5>
+          <span class="tag compounder">Compounding Machine</span>
+          <div class="bars compounder">
+            <div style="height:4%"></div><div style="height:5%"></div><div style="height:6%"></div><div style="height:8%"></div><div style="height:10%"></div><div style="height:12%"></div><div style="height:14%"></div><div style="height:17%"></div><div style="height:20%"></div><div style="height:23%"></div><div style="height:27%"></div><div style="height:31%"></div><div style="height:35%"></div><div style="height:39%"></div><div style="height:43%"></div><div style="height:47%"></div><div style="height:52%"></div><div style="height:57%"></div><div style="height:62%"></div><div style="height:68%"></div><div style="height:80%"></div><div style="height:92%"></div><div style="height:100%"></div>
+          </div>
+        </div>
+        <div class="case-side">
+          <h5>AT&amp;T</h5>
+          <span class="tag not">Not A Compounder</span>
+          <div class="bars not">
+            <div style="height:5%"></div><div style="height:6%"></div><div style="height:7%"></div><div style="height:8%"></div><div style="height:9%"></div><div style="height:10%"></div><div style="height:13%"></div><div style="height:22%"></div><div style="height:28%"></div><div style="height:25%"></div><div style="height:24%"></div><div style="height:22%"></div><div style="height:23%"></div><div style="height:25%"></div><div style="height:35%"></div><div style="height:67%"></div><div style="height:69%"></div><div style="height:71%"></div><div style="height:70%"></div><div style="height:82%"></div><div style="height:100%"></div><div style="height:94%"></div><div style="height:67%"></div>
+          </div>
+        </div>
+      </div>
+      <p class="case-note">Costco แสดงการเติบโตของรายได้อย่างสม่ำเสมอ จากการขึ้นราคา ลูกค้าใหม่ และการขยายสาขา ส่วน AT&amp;T ไม่ใช่เครื่องจักรทบต้น เพราะการเติบโตไม่สม่ำเสมอและส่วนใหญ่มาจากการควบรวมกิจการนอกธุรกิจหลัก</p>
+    </div>
+
+    <div class="case">
+      <div class="case-top"><span class="case-metric">Free Cash Flow Per Share, 2001–2022</span></div>
+      <div class="case-pair">
+        <div class="case-side">
+          <h5>MasterCard</h5>
+          <span class="tag compounder">Compounding Machine</span>
+          <div class="bars compounder">
+            <div style="height:2%"></div><div style="height:3%"></div><div style="height:3%"></div><div style="height:4%"></div><div style="height:5%"></div><div style="height:6%"></div><div style="height:7%"></div><div style="height:12%"></div><div style="height:16%"></div><div style="height:19%"></div><div style="height:25%"></div><div style="height:23%"></div><div style="height:31%"></div><div style="height:35%"></div><div style="height:46%"></div><div style="height:52%"></div><div style="height:70%"></div><div style="height:84%"></div><div style="height:62%"></div><div style="height:85%"></div><div style="height:100%"></div>
+          </div>
+        </div>
+        <div class="case-side">
+          <h5>APA Corporation</h5>
+          <span class="tag not">Not A Compounder</span>
+          <div class="bars not">
+            <div style="height:40%"></div><div style="height:35%"></div><div style="height:18%"></div><div style="height:12%"></div><div style="height:38%"></div><div style="height:8%"></div><div style="height:32%"></div><div style="height:10%"></div><div style="height:44%"></div><div style="height:40%"></div><div style="height:38%"></div><div style="height:60%"></div><div style="height:44%"></div><div style="height:56%"></div><div style="height:100%"></div><div style="height:32%"></div><div style="height:20%"></div><div style="height:5%"></div><div style="height:14%"></div><div style="height:38%"></div><div style="height:88%"></div><div style="height:98%"></div>
+          </div>
+        </div>
+      </div>
+      <p class="case-note">เครื่องจักรทบต้นเพิ่ม free cash flow ต่อหุ้นอย่างสม่ำเสมอและคาดการณ์ได้ ในขณะที่บริษัทอย่าง APA (ผู้ผลิตน้ำมัน) มีอัตราการเติบโตของกระแสเงินสดที่ผันผวนและคาดเดายาก</p>
+    </div>
+
+    <div class="case">
+      <div class="case-top"><span class="case-metric">Shares Outstanding, 1998–2022</span></div>
+      <div class="case-pair">
+        <div class="case-side">
+          <h5>Moody's</h5>
+          <span class="tag compounder">Compounding Machine</span>
+          <div class="bars compounder">
+            <div style="height:100%"></div><div style="height:96%"></div><div style="height:94%"></div><div style="height:93%"></div><div style="height:90%"></div><div style="height:89%"></div><div style="height:89%"></div><div style="height:85%"></div><div style="height:78%"></div><div style="height:71%"></div><div style="height:69%"></div><div style="height:68%"></div><div style="height:66%"></div><div style="height:65%"></div><div style="height:63%"></div><div style="height:60%"></div><div style="height:57%"></div><div style="height:56%"></div><div style="height:55%"></div><div style="height:55%"></div><div style="height:54%"></div><div style="height:54%"></div><div style="height:53%"></div>
+          </div>
+        </div>
+        <div class="case-side">
+          <h5>JetBlue</h5>
+          <span class="tag not">Not A Compounder</span>
+          <div class="bars not">
+            <div style="height:1%"></div><div style="height:1%"></div><div style="height:33%"></div><div style="height:43%"></div><div style="height:46%"></div><div style="height:48%"></div><div style="height:44%"></div><div style="height:46%"></div><div style="height:53%"></div><div style="height:65%"></div><div style="height:95%"></div><div style="height:100%"></div><div style="height:99%"></div><div style="height:98%"></div><div style="height:98%"></div><div style="height:99%"></div><div style="height:94%"></div><div style="height:90%"></div><div style="height:83%"></div><div style="height:85%"></div><div style="height:80%"></div><div style="height:90%"></div><div style="height:93%"></div>
+          </div>
+        </div>
+      </div>
+      <p class="case-note">เครื่องจักรทบต้นซื้อหุ้นคืนด้วยเงินสดส่วนเกิน ซึ่งเพิ่ม FCF ต่อหุ้นและลดจำนวนหุ้นทั้งหมด ในขณะที่บริษัทอื่นเจือจางผู้ถือหุ้นด้วยการออกหุ้นใหม่เพื่อซื้อธุรกิจหรือจ่าย stock-based compensation</p>
+    </div>
+  </section>
+
+  <!-- ============ 04 TEMPERAMENT ============ -->
+  <section id="temperament">
+    <div class="section-head">
+      <div>
+        <div class="section-num">04 — Temperament</div>
+        <h2>อารมณ์การลงทุน</h2>
+      </div>
+    </div>
+    <p class="section-intro">Temperament คือลักษณะนิสัยที่กำหนดว่าเราจะตอบสนองอย่างไรในสถานการณ์ต่างๆ บางลักษณะเอื้อต่อการลงทุนที่ประสบความสำเร็จ บางลักษณะเป็นโทษ — การควบคุมอารมณ์คือกุญแจสู่ความสำเร็จระยะยาว</p>
+
+    <div class="temp-grid">
+      <div>
+        <div class="attr-col-head good">Good Temperament</div>
+        <ul class="temp-list good">
+          <li>ไม่ตื่นเต้นเมื่อตลาดขึ้น</li>
+          <li>ไม่เศร้าหรือกังวลเมื่อตลาดลง</li>
+          <li>อดทนและโอเคกับความน่าเบื่อ</li>
+          <li>ไม่ต้องทำตามฝูงชน</li>
+          <li>ไม่ผูกพันทางอารมณ์กับหุ้น</li>
+          <li>ตัดสินใจอย่างเป็นระบบแม้ในภาวะกดดัน</li>
+        </ul>
+      </div>
+      <div>
+        <div class="attr-col-head bad">Bad Temperament</div>
+        <ul class="temp-list bad">
+          <li>ชอบการพนัน</li>
+          <li>ตื่นเต้นเมื่อตลาดขึ้น</li>
+          <li>กังวลและมองแง่ร้ายเมื่อตลาดลง</li>
+          <li>ซื้อเพราะกลัวพลาดโอกาส (FOMO) และความโลภ</li>
+          <li>ขายเพราะกลัวขาดทุนเพิ่มระหว่างตลาดตก</li>
+          <li>รู้สึกสบายใจเมื่อทำตามฝูงชน</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 INTRINSIC VALUE ============ -->
+  <section id="intrinsic-value">
+    <div class="section-head">
+      <div>
+        <div class="section-num">05 — Valuation</div>
+        <h2>Intrinsic Value</h2>
+      </div>
+    </div>
+    <p class="section-intro">มูลค่าที่แท้จริงประเมินได้จากการจัดอันดับบริษัทตามการเติบโตของ free cash flow และความคาดการณ์ได้ จากนั้นคิดลดด้วย FCF yield ที่เหมาะสม มูลค่าที่แท้จริงเป็นเพียงการประมาณการที่มีความเป็นอัตวิสัย — ยิ่งสมมติฐานแม่นยำและวิจัยมาอย่างดี ยิ่งได้ค่าประมาณที่แม่นยำขึ้น</p>
+
+    <div class="drivers">
+      <div class="driver">
+        <span class="check">✓</span>
+        <h4>Organic Revenue Growth</h4>
+      </div>
+      <div class="driver">
+        <span class="check">✓</span>
+        <h4>Free Cash Flow Per Share Growth</h4>
+      </div>
+      <div class="driver">
+        <span class="check">✓</span>
+        <h4>Predictability Improving</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 PORTFOLIO MANAGEMENT ============ -->
+  <section id="portfolio-management">
+    <div class="section-head">
+      <div>
+        <div class="section-num">06 — Execution</div>
+        <h2>Portfolio Management</h2>
+      </div>
+    </div>
+    <p class="section-intro">การชนะดัชนีเบนช์มาร์กมักเกิดขึ้นได้มากที่สุดกับพอร์ตที่กระจุกตัวในบริษัทคุณภาพสูงที่สุด การซื้อหุ้นแพ้มักหลีกเลี่ยงได้ด้วยการทำตามกลยุทธ์ซื้อ-ขายที่มีวินัย</p>
+
+    <div class="rules">
+      <div class="rule-block">
+        <h3>Buying</h3>
+        <ul class="rule-list">
+          <li class="yes"><span class="mark">✓</span>ซื้อเฉพาะ compounding machines เท่านั้น</li>
+          <li class="yes"><span class="mark">✓</span>ซื้อเมื่อราคาต่ำกว่ามูลค่าที่แท้จริง</li>
+          <li class="no"><span class="mark">✗</span>ไม่แลกคุณภาพกับราคาที่ถูก</li>
+          <li class="no"><span class="mark">✗</span>ไม่เพิ่มพอร์ตในบริษัทที่ความคาดการณ์ได้ลดลง</li>
+        </ul>
+      </div>
+      <div class="rule-block">
+        <h3>Selling</h3>
+        <ul class="rule-list">
+          <li class="yes"><span class="mark">✓</span>ขายเมื่อพบว่าวิเคราะห์ผิดพลาดตั้งแต่ต้น</li>
+          <li class="yes"><span class="mark">✓</span>ขายเมื่อบริษัทไม่เข้าเกณฑ์คุณภาพอีกต่อไป</li>
+          <li class="yes"><span class="mark">✓</span>ขายเมื่อมีโอกาสที่น่าสนใจกว่ามาก</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>INVESTMENT FRAMEWORK — BASED ON THE JOSEPH CARLSON SHOW</p>
+    <p>STOCK SELECTION · TEMPERAMENT · PORTFOLIO MANAGEMENT</p>
+  </footer>
+
+</div>
+</body>
+</html>
