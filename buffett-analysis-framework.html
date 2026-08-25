@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner's Ledger — A Buffett-Style Analysis Framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDD;
+    --paper-2:#E9E1CC;
+    --ink:#20241F;
+    --ledger:#1E3B31;
+    --ledger-2:#295244;
+    --brass:#9C7A3C;
+    --brass-light:#C9A86A;
+    --rule:#c9bfa2;
+    --red:#7A2E2E;
+    --shadow: 0 1px 0 rgba(0,0,0,.04);
+    --serif: 'Source Serif 4', Georgia, serif;
+    --display: 'Fraunces', 'Source Serif 4', serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0,0,0,0.025), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(0,0,0,0.02), transparent 45%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ---------- Layout ---------- */
+  .page{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 clamp(18px, 4vw, 56px) 120px;
+    position:relative;
+    z-index:1;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+    align-items:start;
+  }
+  @media (max-width: 860px){
+    .grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Cover / Masthead ---------- */
+  .masthead{
+    padding: 56px 0 34px;
+    border-bottom: 3px double var(--ledger);
+    margin-bottom: 40px;
+  }
+  .masthead .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .masthead .eyebrow::before{
+    content:"";
+    width:26px; height:1px;
+    background:var(--brass);
+    display:inline-block;
+  }
+  .masthead h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(34px, 5.2vw, 60px);
+    line-height:1.02;
+    margin:0 0 14px;
+    letter-spacing:-.01em;
+    color:var(--ledger);
+  }
+  .masthead h1 em{
+    font-style:italic;
+    font-weight:500;
+    color:var(--brass);
+  }
+  .masthead p.sub{
+    font-size:17px;
+    max-width:620px;
+    color:#4b4738;
+    margin:0 0 22px;
+  }
+  .masthead .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:22px;
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ledger-2);
+    letter-spacing:.02em;
+  }
+  .masthead .meta-row span b{color:var(--ink); font-weight:600;}
+
+  .company-field{
+    display:flex; align-items:baseline; gap:10px;
+    margin-top:26px;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ledger-2);
+  }
+  .company-field input{
+    font-family:var(--display);
+    font-size:22px;
+    font-weight:600;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    border-bottom:1.5px solid var(--rule);
+    padding:2px 4px;
+    flex:1;
+    min-width:160px;
+  }
+  .company-field input:focus{outline:none; border-bottom-color:var(--brass);}
+  .company-field input::placeholder{color:#9a927a; font-weight:500;}
+
+  /* ---------- Side nav / index ---------- */
+  .index{
+    position:sticky;
+    top:24px;
+  }
+  .index h4{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    margin:0 0 14px;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:10px;
+  }
+  .index ol{
+    list-style:none;
+    margin:0; padding:0;
+    counter-reset: idx;
+  }
+  .index li{
+    counter-increment: idx;
+    margin-bottom:2px;
+  }
+  .index a{
+    display:flex;
+    gap:10px;
+    align-items:baseline;
+    text-decoration:none;
+    color:#5c5744;
+    font-size:13.5px;
+    padding:7px 6px;
+    border-radius:3px;
+    transition:background .15s, color .15s;
+  }
+  .index a:hover{background:var(--paper-2); color:var(--ink);}
+  .index a.active{color:var(--ledger); font-weight:600; background:var(--paper-2);}
+  .index a::before{
+    content: counter(idx, decimal-leading-zero);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--brass);
+    flex-shrink:0;
+  }
+  .index .verdict-mini{
+    margin-top:22px;
+    padding:14px 12px;
+    border:1px solid var(--rule);
+    border-radius:4px;
+    background:var(--paper-2);
+  }
+  .index .verdict-mini .lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    margin-bottom:6px;
+  }
+  .index .verdict-mini .val{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:17px;
+    color:var(--ledger);
+  }
+  .index .progress{
+    margin-top:16px;
+  }
+  .index .progress .lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .bar-track{
+    height:5px;
+    background:#dcd3b8;
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--brass), var(--ledger));
+    width:0%;
+    transition:width .4s ease;
+  }
+
+  /* ---------- Sections ---------- */
+  section.card{
+    background: var(--paper);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    padding: 30px clamp(18px,3vw,38px) 34px;
+    margin-bottom:26px;
+    box-shadow: var(--shadow);
+    scroll-margin-top: 24px;
+    position:relative;
+  }
+  section.card::before{
+    content:"";
+    position:absolute;
+    left:0; top:18px; bottom:18px;
+    width:3px;
+    background: var(--brass-light);
+    border-radius:0 3px 3px 0;
+    opacity:.55;
+  }
+
+  .sec-head{
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+    margin-bottom:6px;
+  }
+  .sec-num{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--brass);
+    background:var(--paper-2);
+    border:1px solid var(--rule);
+    width:34px; height:34px;
+    flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    margin-top:2px;
+  }
+  .sec-head h2{
+    font-family:var(--display);
+    font-size:23px;
+    font-weight:600;
+    margin:0;
+    color:var(--ledger);
+  }
+  .sec-head .goal{
+    font-size:14.5px;
+    color:#5c5744;
+    margin:4px 0 0;
+    font-style:italic;
+  }
+
+  .sec-body{
+    margin-top:20px;
+    padding-left:50px;
+  }
+  @media (max-width:600px){ .sec-body{padding-left:0;} }
+
+  .sec-body h4{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    margin:22px 0 10px;
+  }
+  .sec-body h4:first-child{margin-top:0;}
+
+  .qlist, .clist{
+    margin:0 0 6px;
+    padding-left:0;
+    list-style:none;
+  }
+  .qlist li{
+    position:relative;
+    padding:6px 0 6px 20px;
+    font-size:15px;
+    color:#33301f;
+  }
+  .qlist li::before{
+    content:"—";
+    position:absolute; left:0; color:var(--brass);
+  }
+  .clist li{
+    position:relative;
+    padding:5px 0 5px 24px;
+    font-size:14.5px;
+  }
+  .clist li::before{
+    content:"◆";
+    font-size:8px;
+    position:absolute; left:2px; top:11px; color:var(--ledger-2);
+  }
+
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media (max-width:640px){ .two-col{grid-template-columns:1fr;} }
+
+  /* ---------- Notes fields (ruled paper) ---------- */
+  textarea.notes{
+    width:100%;
+    min-height:92px;
+    background:
+      repeating-linear-gradient(var(--paper) 0px, var(--paper) 27px, var(--rule) 28px);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    font-family:var(--serif);
+    font-size:14.5px;
+    line-height:28px;
+    padding:2px 12px 0;
+    color:var(--ink);
+    resize:vertical;
+    display:block;
+  }
+  textarea.notes:focus{outline:none; border-color:var(--brass);}
+  textarea.notes::placeholder{color:#a49c82; font-style:italic;}
+
+  .field-row{margin-top:16px;}
+  .field-row label{
+    display:block;
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    margin-bottom:6px;
+  }
+  input.line, textarea.line{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--rule);
+    font-family:var(--serif);
+    font-size:14.5px;
+    padding:6px 2px;
+    color:var(--ink);
+  }
+  input.line:focus, textarea.line:focus{outline:none; border-bottom-color:var(--brass);}
+  input.line::placeholder, textarea.line::placeholder{color:#a49c82; font-style:italic;}
+
+  /* metric mini-grid for section 3 & valuation */
+  .metric-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
+    gap:14px;
+    margin-top:6px;
+  }
+  .metric-box{
+    border:1px solid var(--rule);
+    border-radius:4px;
+    padding:10px 12px 12px;
+    background:var(--paper-2);
+  }
+  .metric-box label{
+    display:block;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    margin-bottom:6px;
+  }
+  .metric-box input{
+    width:100%;
+    border:none;
+    background:transparent;
+    border-bottom:1px solid var(--rule);
+    font-family:var(--mono);
+    font-size:15px;
+    color:var(--ink);
+    padding:3px 0;
+  }
+  .metric-box input:focus{outline:none; border-bottom-color:var(--brass);}
+
+  /* Value range slider-ish bar */
+  .range-visual{
+    margin-top:18px;
+    padding:16px 18px;
+    background:var(--paper-2);
+    border:1px solid var(--rule);
+    border-radius:4px;
+  }
+  .range-visual .rv-labels{
+    display:flex; justify-content:space-between;
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ledger-2);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-bottom:8px;
+  }
+  .range-track{
+    position:relative;
+    height:10px;
+    background:linear-gradient(90deg, #cdbf98, var(--brass-light), #cdbf98);
+    border-radius:6px;
+  }
+  .range-track .low-mark, .range-track .high-mark, .range-track .base-mark{
+    position:absolute; top:-6px;
+    width:2px; height:22px;
+    background:var(--ledger);
+  }
+  .range-track .base-mark{ background:var(--red); width:3px; }
+  .range-track .low-mark{left:6%;}
+  .range-track .base-mark{left:50%;}
+  .range-track .high-mark{left:94%;}
+  .range-tick-label{
+    position:absolute;
+    top:20px;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--ledger-2);
+    transform:translateX(-50%);
+    white-space:nowrap;
+  }
+
+  /* ---------- Buy rule ---------- */
+  .rule-pair{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:16px;
+  }
+  @media (max-width:600px){ .rule-pair{grid-template-columns:1fr;} }
+  .rule-card{
+    border:1.5px solid var(--ledger);
+    border-radius:4px;
+    padding:14px 16px;
+  }
+  .rule-card.watch{border-color:var(--brass);}
+  .rule-card label{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ledger-2);
+    display:block;
+    margin-bottom:6px;
+  }
+  .rule-card .cur{font-family:var(--display); font-size:18px; color:var(--ledger); margin-right:4px;}
+  .rule-card input{
+    border:none; background:transparent;
+    font-family:var(--mono);
+    font-size:18px;
+    color:var(--ink);
+    width:100%;
+    border-bottom:1px solid var(--rule);
+    padding:4px 0;
+  }
+  .rule-card input:focus{outline:none; border-bottom-color:var(--brass);}
+
+  /* ---------- Checklist / verdict section ---------- */
+  .final-checklist{
+    display:grid;
+    gap:10px;
+    margin-top:10px;
+  }
+  .check-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 14px;
+    background:var(--paper-2);
+    border:1px solid var(--rule);
+    border-radius:5px;
+  }
+  .check-item input[type=checkbox]{
+    appearance:none;
+    -webkit-appearance:none;
+    width:20px; height:20px;
+    border:1.5px solid var(--ledger-2);
+    border-radius:3px;
+    flex-shrink:0;
+    display:grid;
+    place-content:center;
+    cursor:pointer;
+    background:var(--paper);
+  }
+  .check-item input[type=checkbox]::before{
+    content:"";
+    width:11px; height:11px;
+    transform:scale(0);
+    transition:transform .12s ease-in;
+    box-shadow: inset 1em 1em var(--ledger);
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 45% 62%);
+  }
+  .check-item input[type=checkbox]:checked::before{transform:scale(1);}
+  .check-item span{font-size:15px;}
+
+  .verdict-box{
+    margin-top:26px;
+    border:2px solid var(--ledger);
+    border-radius:6px;
+    padding:22px 24px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    align-items:center;
+    justify-content:space-between;
+    background: linear-gradient(180deg, var(--paper-2), var(--paper));
+  }
+  .verdict-box .label-block{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ledger-2);}
+  .verdict-choices{display:flex; gap:10px; flex-wrap:wrap;}
+  .verdict-choices button{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:14px;
+    padding:10px 20px;
+    border-radius:30px;
+    border:1.5px solid var(--ledger);
+    background:transparent;
+    color:var(--ledger);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .verdict-choices button:hover{background:var(--ledger); color:var(--paper);}
+  .verdict-choices button.selected{background:var(--ledger); color:var(--paper);}
+  .verdict-choices button.selected.watch{background:var(--brass); border-color:var(--brass); color:var(--ink);}
+  .verdict-choices button.selected.hold{background:#5c5744; border-color:#5c5744; color:var(--paper);}
+
+  .stamp{
+    font-family:var(--display);
+    font-weight:700;
+    font-style:italic;
+    font-size:15px;
+    padding:8px 16px;
+    border:2px solid var(--red);
+    color:var(--red);
+    border-radius:4px;
+    transform:rotate(-3deg);
+    letter-spacing:.04em;
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .stamp.show{opacity:1;}
+
+  /* ---------- Footer ---------- */
+  .foot{
+    margin-top:40px;
+    padding-top:22px;
+    border-top:1px solid var(--rule);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--ledger-2);
+  }
+  .foot button{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    background:transparent;
+    border:1px solid var(--ledger-2);
+    color:var(--ledger-2);
+    padding:9px 16px;
+    border-radius:3px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .foot button:hover{background:var(--ledger-2); color:var(--paper);}
+
+  @media print{
+    .index, .foot button{display:none;}
+    section.card{break-inside:avoid; box-shadow:none;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="masthead">
+    <div class="eyebrow">Field Manual · Value Investing</div>
+    <h1>The Owner's <em>Ledger</em></h1>
+    <p class="sub">A repeatable framework for underwriting a business the way an owner would — not a stock. Understand it, find the moat, measure the cash it truly throws off, judge the stewards, check the balance sheet, then pay a fair price with room to be wrong.</p>
+    <div class="meta-row">
+      <span><b>7</b> sections</span>
+      <span><b>Circle&nbsp;→&nbsp;Moat&nbsp;→&nbsp;Engine&nbsp;→&nbsp;Management&nbsp;→&nbsp;Strength&nbsp;→&nbsp;Valuation&nbsp;→&nbsp;Memo</b></span>
+      <span>Everything below is fillable &amp; stays on this page</span>
+    </div>
+    <div class="company-field">
+      <span>Subject —</span>
+      <input type="text" id="companyName" placeholder="Company name / ticker">
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- SIDE INDEX -->
+    <nav class="index">
+      <h4>Sections</h4>
+      <ol id="navList">
+        <li><a href="#s1">Circle of Competence</a></li>
+        <li><a href="#s2">The Moat</a></li>
+        <li><a href="#s3">Economic Engine</a></li>
+        <li><a href="#s4">Management</a></li>
+        <li><a href="#s5">Financial Strength</a></li>
+        <li><a href="#s6">Valuation</a></li>
+        <li><a href="#s7">The Memo</a></li>
+      </ol>
+
+      <div class="progress">
+        <div class="lbl"><span>Checklist filled</span><span id="progressPct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="progressBar"></div></div>
+      </div>
+
+      <div class="verdict-mini">
+        <div class="lbl">Current Verdict</div>
+        <div class="val" id="verdictMini">Undecided</div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+      <!-- 1 -->
+      <section class="card" id="s1">
+        <div class="sec-head">
+          <div class="sec-num">1</div>
+          <div>
+            <h2>Circle of Competence</h2>
+            <p class="goal">Only analyze businesses you can explain simply.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+          <h4>Questions to answer</h4>
+          <ul class="qlist">
+            <li>What does the company sell, to whom, and why do customers buy?</li>
+            <li>What are the 2–3 key profit drivers — price, volume, retention, cost structure?</li>
+            <li>What could permanently damage the business (not just a bad quarter)?</li>
+          </ul>
+          <div class="field-row">
+            <label>The business, in three sentences</label>
+            <textarea class="notes" placeholder="Explain what it sells, to whom, and why they buy — plainly enough to say out loud."></textarea>
+          </div>
+          <div class="field-row">
+            <label>Main competitors &amp; why customers choose this company instead</label>
+            <textarea class="notes" placeholder="Name the alternatives, and the specific reason this one wins the sale."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="card" id="s2">
+        <div class="sec-head">
+          <div class="sec-num">2</div>
+          <div>
+            <h2>The Moat</h2>
+            <p class="goal">Evidence that profits can stay high despite competition.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+          <h4>Moat types — mark what applies</h4>
+          <div class="final-checklist" id="moatChecklist">
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Brand / pricing power</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Switching costs</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Network effects</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Cost advantage</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Intangible assets — patents, licenses, data, distribution</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Efficient scale — market only supports 1–2 winners</span></label>
+          </div>
+          <h4>Evidence to collect (10-year view if possible)</h4>
+          <ul class="clist">
+            <li>Stable or improving gross margin and operating margin</li>
+            <li>Stable or improving market share without margin collapse</li>
+            <li>Ability to raise prices without losing customers</li>
+          </ul>
+          <div class="field-row">
+            <label>Notes / evidence</label>
+            <textarea class="notes" placeholder="Cite the actual margin trend, share data, or pricing history you found."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="card" id="s3">
+        <div class="sec-head">
+          <div class="sec-num">3</div>
+          <div>
+            <h2>Economic Engine</h2>
+            <p class="goal">The company turns capital into cash at attractive rates.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+          <h4>Key metrics (quality checks)</h4>
+          <div class="metric-grid">
+            <div class="metric-box"><label>ROIC (preferred)</label><input type="text" placeholder="e.g. 18%"></div>
+            <div class="metric-box"><label>ROE (watch leverage)</label><input type="text" placeholder="e.g. 24%"></div>
+            <div class="metric-box"><label>Free cash flow</label><input type="text" placeholder="e.g. $4.1B"></div>
+            <div class="metric-box"><label>FCF / Net income</label><input type="text" placeholder="e.g. 0.95x"></div>
+            <div class="metric-box"><label>Capital intensity</label><input type="text" placeholder="Low / Med / High"></div>
+          </div>
+          <h4>Red flags to rule out</h4>
+          <ul class="clist">
+            <li>Earnings up, but FCF weak for many years</li>
+            <li>Heavy share dilution funding operations</li>
+            <li>Returns only look good because of debt</li>
+          </ul>
+          <div class="field-row">
+            <label>Notes / numbers</label>
+            <textarea class="notes" placeholder="Trend over the last decade, and whether accounting profit is 'real' cash."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="card" id="s4">
+        <div class="sec-head">
+          <div class="sec-num">4</div>
+          <div>
+            <h2>Management</h2>
+            <p class="goal">Rational, honest, shareholder-minded decisions.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+          <h4>What to check</h4>
+          <ul class="qlist">
+            <li>Candor in annual letters — are mistakes acknowledged?</li>
+            <li>Incentives aligned with long-term value</li>
+          </ul>
+          <h4>Capital allocation track record</h4>
+          <div class="final-checklist">
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Reinvests at high returns</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Disciplined acquisitions — not empire-building</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Buybacks only when undervalued</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Prudent dividends, if appropriate</span></label>
+          </div>
+          <div class="field-row">
+            <label>Notes / quotes</label>
+            <textarea class="notes" placeholder="Pull a specific line from a letter, or a decision that reveals how they think about capital."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="card" id="s5">
+        <div class="sec-head">
+          <div class="sec-num">5</div>
+          <div>
+            <h2>Financial Strength</h2>
+            <p class="goal">Avoid permanent loss from leverage or a fragile structure.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+          <div class="final-checklist">
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Debt level and maturity schedule manageable</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Interest coverage reasonable</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Liquidity adequate for downturns</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Pension / lease / off-balance-sheet obligations understood</span></label>
+          </div>
+          <div class="field-row">
+            <label>Notes</label>
+            <textarea class="notes" placeholder="Debt/EBITDA, coverage ratio, cash on hand vs. near-term obligations."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="card" id="s6">
+        <div class="sec-head">
+          <div class="sec-num">6</div>
+          <div>
+            <h2>Valuation</h2>
+            <p class="goal">Pay a fair price — or better — for a wonderful business.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+
+          <h4>6.1 Owner earnings — practical estimate</h4>
+          <ol class="qlist" style="counter-reset:steps;">
+            <li>Start with operating cash flow</li>
+            <li>Subtract maintenance capex — what's needed to maintain competitive position</li>
+            <li>Adjust for unusual, one-off items</li>
+          </ol>
+          <div class="field-row">
+            <label>Normalized owner earnings / FCF (estimate)</label>
+            <input type="text" class="line" placeholder="e.g. ~$3.6B, normalized for the 2024 litigation charge">
+          </div>
+
+          <h4>6.2 Intrinsic value range</h4>
+          <p style="font-size:14px;color:#5c5744;margin:0 0 10px;">Conservative growth assumptions. Discount rate you're comfortable with — often 8–12%. A range, not a point.</p>
+          <div class="metric-grid" style="grid-template-columns:repeat(3,1fr);">
+            <div class="metric-box"><label>Low</label><input type="text" id="ivLow" placeholder="$ / share"></div>
+            <div class="metric-box"><label>Base</label><input type="text" id="ivBase" placeholder="$ / share"></div>
+            <div class="metric-box"><label>High</label><input type="text" id="ivHigh" placeholder="$ / share"></div>
+          </div>
+          <div class="range-visual">
+            <div class="rv-labels"><span>Low</span><span>Base case</span><span>High</span></div>
+            <div class="range-track">
+              <div class="low-mark"></div>
+              <div class="base-mark"></div>
+              <div class="high-mark"></div>
+              <div class="range-tick-label" id="ivLowLbl" style="left:6%;">—</div>
+              <div class="range-tick-label" id="ivBaseLbl" style="left:50%;">—</div>
+              <div class="range-tick-label" id="ivHighLbl" style="left:94%;">—</div>
+            </div>
+          </div>
+
+          <h4>6.3 Margin of safety rule</h4>
+          <div class="rule-pair">
+            <div class="rule-card">
+              <label>Buy below</label>
+              <input type="text" id="buyBelow" placeholder="$ / share">
+            </div>
+            <div class="rule-card watch">
+              <label>Watchlist below</label>
+              <input type="text" id="watchBelow" placeholder="$ / share">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="card" id="s7">
+        <div class="sec-head">
+          <div class="sec-num">7</div>
+          <div>
+            <h2>The Memo</h2>
+            <p class="goal">One page. Everything above, distilled to a decision.</p>
+          </div>
+        </div>
+        <div class="sec-body">
+
+          <div class="field-row">
+            <label>Thesis — 3 to 6 bullets</label>
+            <textarea class="notes" style="min-height:120px;" placeholder="Why this business, why now, why at this price."></textarea>
+          </div>
+
+          <div class="two-col">
+            <div class="field-row">
+              <label>Moat summary</label>
+              <textarea class="notes" placeholder="The one or two moats that actually matter here."></textarea>
+            </div>
+            <div class="field-row">
+              <label>Risks — what could break the thesis</label>
+              <textarea class="notes" placeholder="The specific thing that, if it happened, would make you sell."></textarea>
+            </div>
+          </div>
+
+          <h4>Key metrics to track annually</h4>
+          <div class="metric-grid">
+            <div class="metric-box"><label>ROIC</label><input type="text" placeholder="target / actual"></div>
+            <div class="metric-box"><label>Operating margin</label><input type="text" placeholder="target / actual"></div>
+            <div class="metric-box"><label>FCF</label><input type="text" placeholder="target / actual"></div>
+            <div class="metric-box"><label>Debt / leverage</label><input type="text" placeholder="target / actual"></div>
+            <div class="metric-box"><label>Shares outstanding</label><input type="text" placeholder="dilution or buyback trend"></div>
+          </div>
+
+          <div class="field-row">
+            <label>Current price vs. value / conditions to add more</label>
+            <textarea class="notes" placeholder="Where it trades today relative to your range, and what would make you buy more."></textarea>
+          </div>
+
+          <h4 style="margin-top:28px;">Final quick checklist</h4>
+          <div class="final-checklist" id="finalChecklist">
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Understandable business?</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Durable moat with evidence?</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Strong cash generation &amp; high returns on capital?</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Solid balance sheet?</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Management allocates capital well?</span></label>
+            <label class="check-item"><input type="checkbox" class="progress-item"><span>Price offers a margin of safety?</span></label>
+          </div>
+
+          <div class="verdict-box">
+            <div>
+              <div class="label-block">Decision</div>
+              <div class="verdict-choices" id="verdictChoices">
+                <button data-v="Buy">Buy</button>
+                <button data-v="Watch" class="watch-btn">Watch</button>
+                <button data-v="Hold" class="hold-btn">Hold</button>
+                <button data-v="Pass">Pass</button>
+              </div>
+            </div>
+            <div class="stamp" id="stamp">FILED</div>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="foot">
+        <span>Owner's Ledger — a repeatable framework, not investment advice. Fill it in, argue with it, revisit it annually.</span>
+        <button id="printBtn">Print / Save as PDF</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // Scrollspy for side nav
+  const sections = document.querySelectorAll('section.card');
+  const links = document.querySelectorAll('#navList a');
+  const linkMap = {};
+  links.forEach(a => linkMap[a.getAttribute('href').slice(1)] = a);
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = linkMap[entry.target.id];
+      if(!link) return;
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(s => spy.observe(s));
+
+  // Progress bar from all checkbox items
+  const allChecks = () => document.querySelectorAll('.progress-item');
+  function updateProgress(){
+    const items = allChecks();
+    const checked = Array.from(items).filter(i => i.checked).length;
+    const pct = items.length ? Math.round((checked/items.length)*100) : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+  document.addEventListener('change', (e) => {
+    if(e.target.classList.contains('progress-item')) updateProgress();
+  });
+  updateProgress();
+
+  // Valuation range visual
+  function fmt(v){ return v && v.trim() !== '' ? v : '—'; }
+  ['ivLow','ivBase','ivHigh'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      document.getElementById(id + 'Lbl').textContent = fmt(e.target.value);
+    });
+  });
+
+  // Verdict buttons
+  const verdictButtons = document.querySelectorAll('#verdictChoices button');
+  const verdictMini = document.getElementById('verdictMini');
+  const stamp = document.getElementById('stamp');
+  verdictButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      verdictButtons.forEach(b => b.classList.remove('selected','watch','hold'));
+      btn.classList.add('selected');
+      if(btn.dataset.v === 'Watch') btn.classList.add('watch');
+      if(btn.dataset.v === 'Hold') btn.classList.add('hold');
+      verdictMini.textContent = btn.dataset.v;
+      stamp.textContent = btn.dataset.v.toUpperCase();
+      stamp.classList.add('show');
+    });
+  });
+
+  // Company name reflects in header eyebrow area (title tab)
+  document.getElementById('companyName').addEventListener('input', (e) => {
+    const v = e.target.value.trim();
+    document.title = v ? `Owner's Ledger — ${v}` : "Owner's Ledger — A Buffett-Style Analysis";
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+</script>
+
+</body>
+</html>
