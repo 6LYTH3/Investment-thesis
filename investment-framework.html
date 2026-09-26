@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>กรอบความคิดการลงทุน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EFEAD9;
+    --paper-panel: #F8F5E9;
+    --paper-panel-2: #E4DEC8;
+    --ink: #22271E;
+    --ink-soft: #55594C;
+    --brass: #96652A;
+    --brass-strong: #7A521F;
+    --teal: #2E4A43;
+    --teal-soft: #3E5F57;
+    --rule: #CBC3A6;
+    --shadow: rgba(34, 39, 30, 0.08);
+
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #171A15;
+      --paper-panel: #1E2219;
+      --paper-panel-2: #262B1F;
+      --ink: #E9E4D3;
+      --ink-soft: #B4AE99;
+      --brass: #D9A254;
+      --brass-strong: #EABE73;
+      --teal: #7FAB9E;
+      --teal-soft: #6C9A8D;
+      --rule: #3A3F31;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #171A15;
+    --paper-panel: #1E2219;
+    --paper-panel-2: #262B1F;
+    --ink: #E9E4D3;
+    --ink-soft: #B4AE99;
+    --brass: #D9A254;
+    --brass-strong: #EABE73;
+    --teal: #7FAB9E;
+    --teal-soft: #6C9A8D;
+    --rule: #3A3F31;
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans Thai", "Noto Sans Thai", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+
+  header.cover {
+    margin-bottom: 56px;
+  }
+
+  .kicker {
+    font-family: "Taviraj", serif;
+    font-size: 15px;
+    color: var(--brass);
+    letter-spacing: 0.02em;
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: "Taviraj", serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.25;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 64px 0 28px;
+  }
+  .divider .num {
+    font-family: "Taviraj", serif;
+    font-size: 15px;
+    color: var(--brass);
+    white-space: nowrap;
+  }
+  .divider .line {
+    height: 1px;
+    background: var(--rule);
+    flex: 1;
+  }
+
+  h2 {
+    font-family: "Taviraj", serif;
+    font-weight: 600;
+    font-size: 26px;
+    margin: 0 0 20px;
+    color: var(--ink);
+  }
+
+  h3 {
+    font-family: "Taviraj", serif;
+    font-weight: 600;
+    font-size: 19px;
+    margin: 28px 0 10px;
+    color: var(--ink);
+  }
+
+  p { margin: 0 0 16px; }
+
+  section { margin-bottom: 8px; }
+
+  /* Top-down allocation visual */
+  .tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 28px 0 8px;
+  }
+  .tier {
+    background: var(--paper-panel);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 18px;
+  }
+  .tier-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .tier-head .name {
+    font-family: "Taviraj", serif;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .tier-head .pct {
+    font-family: "Taviraj", serif;
+    color: var(--brass);
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .bar-track {
+    height: 6px;
+    background: var(--paper-panel-2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--brass);
+    border-radius: 3px;
+  }
+  .tier p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+
+  /* Checklist */
+  ol.checklist {
+    list-style: none;
+    margin: 0 0 8px;
+    padding: 0;
+    counter-reset: item;
+  }
+  ol.checklist > li {
+    counter-increment: item;
+    position: relative;
+    padding: 18px 0 18px 44px;
+    border-top: 1px solid var(--rule);
+  }
+  ol.checklist > li:first-child { border-top: none; }
+  ol.checklist > li::before {
+    content: counter(item);
+    font-family: "Taviraj", serif;
+    position: absolute;
+    left: 0;
+    top: 18px;
+    font-size: 15px;
+    color: var(--brass);
+    border: 1px solid var(--brass);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.checklist .item-title {
+    font-family: "Taviraj", serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0 0 4px;
+  }
+  ol.checklist .item-body {
+    color: var(--ink-soft);
+    font-size: 15px;
+    margin: 0;
+  }
+
+  /* Financial health expanded panel */
+  .fh-panel {
+    background: var(--paper-panel);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--brass);
+    border-radius: 3px;
+    padding: 22px 24px 8px;
+    margin: 8px 0 18px;
+  }
+  .fh-block {
+    margin-bottom: 22px;
+  }
+  .fh-block h4 {
+    font-family: "Taviraj", serif;
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--teal);
+    margin: 0 0 8px;
+  }
+  .fh-block ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .fh-block li {
+    margin-bottom: 7px;
+    color: var(--ink);
+    font-size: 15.5px;
+  }
+  .fh-block li:last-child { margin-bottom: 0; }
+  .fh-note {
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  /* Plain numbered list (questions / steps) */
+  ol.plain {
+    margin: 0 0 8px;
+    padding-left: 22px;
+  }
+  ol.plain li {
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  ol.plain li:last-child { margin-bottom: 0; }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 8px 0 24px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 560px;
+    font-size: 14.5px;
+  }
+  thead th {
+    font-family: "Taviraj", serif;
+    font-weight: 600;
+    text-align: left;
+    background: var(--teal);
+    color: var(--paper-panel);
+    padding: 12px 16px;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(odd) { background: var(--paper-panel); }
+  td strong { color: var(--brass-strong); font-family: "Taviraj", serif; }
+
+  /* Moat list */
+  .moat {
+    margin-bottom: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .moat:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .moat h4 {
+    font-family: "Taviraj", serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .moat ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+  }
+  .moat ul li { margin-bottom: 6px; font-size: 15px; color: var(--ink-soft); }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .step {
+    display: flex;
+    gap: 14px;
+    background: var(--paper-panel);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 18px;
+  }
+  .step .tag {
+    font-family: "Taviraj", serif;
+    color: var(--brass);
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+  .step p { margin: 0; font-size: 15px; }
+  .step .lvl { color: var(--teal); font-weight: 600; }
+
+  footer.endcap {
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 13.5px;
+  }
+
+  @media (max-width: 520px) {
+    h1 { font-size: 32px; }
+    .page { padding: 48px 18px 72px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="cover">
+    <p class="kicker">บันทึกแนวทางการลงทุน</p>
+    <h1>กรอบความคิดการลงทุน</h1>
+    <p class="lede">แนวทาง research แบบ top-down เครื่องมือประเมินธุรกิจ และกรอบวิเคราะห์ความได้เปรียบทางการแข่งขัน สำหรับใช้ประกอบการตัดสินใจก่อนเลือกลงทุนในหุ้นรายตัว</p>
+  </header>
+
+  <div class="divider"><span class="num">ส่วนที่ 1</span><span class="line"></span></div>
+  <section>
+    <h2>Research: แนวทาง Top-Down</h2>
+    <p>มองจากภาพกว้างเข้าสู่รายละเอียด แบ่งเวลาตามน้ำหนักที่แต่ละระดับควรได้รับ</p>
+
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-head">
+          <span class="name">Macro — ภาพรวมเศรษฐกิจ</span>
+          <span class="pct">10–20%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:15%"></div></div>
+        <p>ทิศทางเศรษฐกิจ ดอกเบี้ย และนโยบายรัฐ</p>
+      </div>
+      <div class="tier">
+        <div class="tier-head">
+          <span class="name">Sector — อุตสาหกรรม</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:35%"></div></div>
+        <p>อุตสาหกรรมไหนกำลังเป็นขาขึ้น หรือได้รับประโยชน์จากเทรนด์โลก</p>
+      </div>
+      <div class="tier">
+        <div class="tier-head">
+          <span class="name">Individual — รายสินทรัพย์</span>
+          <span class="pct">70–80%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%"></div></div>
+        <p>เจาะลึกรายตัว — สายพื้นฐาน: อ่าน 56-1 One Report, ฟัง Opp Day, วิเคราะห์โมเดลธุรกิจ • สายเทคนิค: วางแผนจุดซื้อ-ขาย, ดูกราฟย้อนหลัง, ทดสอบระบบ (backtest)</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span class="num">ส่วนที่ 2</span><span class="line"></span></div>
+  <section>
+    <h2>เครื่องมือช่วยทุ่นแรง — The Checklist</h2>
+
+    <ol class="checklist">
+      <li>
+        <p class="item-title">Business Model</p>
+        <p class="item-body">บริษัททำมาหากินอย่างไร? อะไรคือจุดแข็ง? มี moat หรือไม่?</p>
+      </li>
+      <li>
+        <p class="item-title">Financial Health</p>
+        <p class="item-body">กำไรโตไหม? หนี้เยอะหรือเปล่า? กระแสเงินสดเป็นอย่างไร? — รายละเอียดในส่วนที่ 6</p>
+      </li>
+      <li>
+        <p class="item-title">Valuation</p>
+        <p class="item-body">ราคาตอนนี้ถูกหรือแพงเมื่อเทียบกับมูลค่าที่ควรจะเป็น?</p>
+      </li>
+      <li>
+        <p class="item-title">Risk</p>
+        <p class="item-body">อะไรจะทำให้การลงทุนนี้ล้มเหลว?</p>
+      </li>
+    </ol>
+  </section>
+
+  <div class="divider"><span class="num">ส่วนที่ 3</span><span class="line"></span></div>
+  <section>
+    <h2>5 คำถามหลัก ก่อนเลือกธุรกิจ</h2>
+    <ol class="plain">
+      <li>ธุรกิจนั้นส่งมอบสินค้าหรือคุณค่าใดให้กับลูกค้า</li>
+      <li>มีคนอื่นส่งมอบคุณค่านั้นด้วยหรือไม่</li>
+      <li>ฉันเลือกที่จะรับคุณค่านั้นจากที่อื่น แทนที่จะเป็นที่นี้หรือไม่</li>
+      <li>ทำไมเราเลือกคุณค่านั้นจากที่นี้ แทนที่จะเป็นที่อื่น</li>
+      <li>เหตุผลที่ระบุในข้อที่ 4 เป็นสิ่งที่ยั่งยืนในระยะยาวหรือไม่</li>
+    </ol>
+  </section>
+
+  <div class="divider"><span class="num">ส่วนที่ 4</span><span class="line"></span></div>
+  <section>
+    <h2>7 Powers Framework</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>พลัง</th><th>คำจำกัดความ</th><th>ตัวอย่าง</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Scale Economies</strong></td><td>ยิ่งผลิตเยอะ ต้นทุนต่อหน่วยยิ่งถูกลง ทำให้คู่แข่งหน้าใหม่สู้ราคาไม่ได้</td><td>Netflix — สมาชิกมากที่สุด ต้นทุนคอนเทนต์ต่อหัวต่ำกว่าคู่แข่ง</td></tr>
+          <tr><td><strong>Network Economies</strong></td><td>ยิ่งคนใช้เยอะ สินค้ายิ่งมีค่ามากขึ้น</td><td>Facebook/Line — ย้ายไปแอปอื่นยากเพราะเพื่อนยังอยู่ในนี้</td></tr>
+          <tr><td><strong>Counter-Positioning</strong></td><td>บริษัทใหม่ใช้โมเดลธุรกิจที่ดีกว่า จนบริษัทเก่าไม่กล้าเลียนแบบเพราะจะพังธุรกิจเดิมของตัวเอง</td><td>Vanguard — กองทุนดัชนีค่าธรรมเนียมต่ำ บลจ. เก่าไม่กล้าทำตาม</td></tr>
+          <tr><td><strong>Switching Costs</strong></td><td>ลูกค้าเปลี่ยนไปใช้เจ้าอื่นยาก เพราะมีค่าใช้จ่าย ความยุ่งยาก หรือต้องเรียนใหม่</td><td>Apple Ecosystem — ข้อมูลและ iCloud ผูกไว้หมด</td></tr>
+          <tr><td><strong>Branding</strong></td><td>ลูกค้ายอมจ่ายแพงกว่าเพื่อความมั่นใจหรือสถานะ แม้คุณภาพใกล้เคียงคู่แข่ง</td><td>Tiffany & Co. / Ferrari</td></tr>
+          <tr><td><strong>Cornered Resource</strong></td><td>ครอบครองทรัพยากรสำคัญเพียงผู้เดียว เช่น สิทธิบัตร ทำเลทอง หรือตัวบุคคล</td><td>Pixar — ทีมคิดบทที่หาที่อื่นไม่ได้</td></tr>
+          <tr><td><strong>Process Power</strong></td><td>มีระบบการทำงานซับซ้อนและฝังรากลึก คู่แข่งเลียนแบบยากแม้รู้ว่าทำอย่างไร</td><td>Toyota — ระบบผลิต TPS ที่สร้างมานับสิบปี</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>คำถามที่ต้องตอบให้ได้</h3>
+    <ol class="plain">
+      <li>บริษัทนี้มี Power ข้อไหนเด่นที่สุด? หากหาไม่เจอแม้แต่ข้อเดียว ให้ระวังว่าอาจเป็นหุ้นที่แข่งขันสูงและกำไรไม่ยั่งยืน</li>
+      <li>Barrier คืออะไร? คู่แข่งจะเข้ามาเจาะตลาดนี้ได้ยากแค่ไหนในอีก 5–10 ปีข้างหน้า</li>
+      <li>พลังนั้นกำลัง "แข็งแกร่งขึ้น" หรือ "เสื่อมถอยลง"? เช่น แบรนด์เริ่มเสื่อมความนิยม หรือมีเทคโนโลยีใหม่มาทำลาย switching costs</li>
+    </ol>
+  </section>
+
+  <div class="divider"><span class="num">ส่วนที่ 5</span><span class="line"></span></div>
+  <section>
+    <h2>Financial Health — รายละเอียดเชิงลึก</h2>
+    <p>ขยายจากหัวข้อ Financial Health ในเช็คลิสต์ (ส่วนที่ 2) เป็น 4 มุมมองที่ต้องตรวจสอบก่อนสรุปว่าฐานะการเงินของบริษัทแข็งแรงจริงหรือไม่</p>
+
+    <div class="fh-panel">
+      <div class="fh-block">
+        <h4>ลูกค้าคือใคร</h4>
+        <ul>
+          <li>ลูกค้าหลักเป็นใคร — ผู้บริโภครายย่อย (B2C) ธุรกิจ (B2B) หรือหน่วยงานรัฐ</li>
+          <li>ลูกค้ามีอำนาจต่อรองมากน้อยแค่ไหน และส่งผลต่อราคาขายหรือ margin ของบริษัทหรือไม่</li>
+          <li>เป็นลูกค้าประจำที่ซื้อซ้ำต่อเนื่อง หรือเป็นการขายแบบครั้งเดียวจบ</li>
+          <li>มีลูกค้ารายใหญ่รายใดคิดเป็นสัดส่วนสูงของรายได้หรือไม่ (customer concentration)</li>
+        </ul>
+      </div>
+
+      <div class="fh-block">
+        <h4>รายได้ กำไร และ Margins</h4>
+        <ul>
+          <li>อัตราการเติบโตของรายได้ย้อนหลัง 3–5 ปี เติบโตสม่ำเสมอ หรือผันผวนตามวัฏจักร</li>
+          <li>กำไรโตเร็วกว่าหรือช้ากว่ารายได้ — ถ้ากำไรโตเร็วกว่า มักสะท้อน operating leverage หรืออำนาจต่อรองที่ดีขึ้น</li>
+          <li>ดูแนวโน้ม Gross Margin, Operating Margin และ Net Margin ว่าทรงตัว ขยายตัว หรือหดตัวลงเรื่อยๆ</li>
+          <li>เทียบ margin กับคู่แข่งในอุตสาหกรรมเดียวกัน เพื่อดูว่าอยู่ระดับบน กลาง หรือล่างของกลุ่ม</li>
+        </ul>
+      </div>
+
+      <div class="fh-block">
+        <h4>รายได้แยกตามส่วนงาน (Revenue by Segment)</h4>
+        <ul>
+          <li>รายได้มาจากธุรกิจ/ผลิตภัณฑ์/ภูมิภาคใดบ้าง และสัดส่วนของแต่ละส่วนเป็นเท่าไหร่</li>
+          <li>มีการพึ่งพาลูกค้า ผลิตภัณฑ์ หรือตลาดใดตลาดหนึ่งมากเกินไปหรือไม่ (concentration risk)</li>
+          <li>ส่วนงานใดกำลังเติบโตเร็ว ส่วนใดกำลังหดตัว — เพื่อประเมินว่าอะไรจะเป็นตัวขับเคลื่อนรายได้ในอนาคต</li>
+          <li>สัดส่วนรายได้แบบ recurring (สม่ำเสมอ ต่อเนื่อง) เทียบกับรายได้แบบครั้งเดียวหรือตามโครงการ</li>
+        </ul>
+      </div>
+
+      <div class="fh-block">
+        <h4>กระแสเงินสดจากการดำเนินงาน (CFO)</h4>
+        <ul>
+          <li>CFO เป็นบวกต่อเนื่องและเติบโตสอดคล้องไปกับกำไรทางบัญชีหรือไม่</li>
+          <li>เทียบ Net Income กับ CFO — หากกำไรสูงแต่ CFO ต่ำหรือติดลบต่อเนื่อง อาจเป็นสัญญาณของคุณภาพกำไรที่ไม่ดี เช่น ลูกหนี้การค้าหรือสต๊อกสินค้าเพิ่มขึ้นเร็วผิดปกติ</li>
+          <li>CFO ที่แปลงมาจากกำไรได้สม่ำเสมอ คือสัญญาณว่ากำไรที่รายงานเป็น "เงินสดจริง" ไม่ใช่แค่ตัวเลขทางบัญชี</li>
+        </ul>
+      </div>
+
+      <div class="fh-block">
+        <h4>Free Cash Flow และการใช้เงิน</h4>
+        <ul>
+          <li>FCF = CFO หัก Capex — ดูว่าเหลือเงินสดหลังลงทุนในสินทรัพย์แล้วมากน้อยเพียงใด</li>
+          <li>บริษัทนำ FCF ไปใช้ทางใดเป็นหลัก: จ่ายปันผล ซื้อหุ้นคืน (buyback) ลดหนี้ ลงทุนขยายธุรกิจ/ควบรวมกิจการ หรือสะสมเป็นเงินสด</li>
+          <li>การจัดสรรเงินทุน (capital allocation) ของผู้บริหารสะท้อนวินัยและวิสัยทัศน์ในการบริหารเงิน — จัดสรรเพื่อสร้างผลตอบแทนระยะยาว หรือเพียงรักษาราคาหุ้นระยะสั้น</li>
+        </ul>
+        <p class="fh-note">หากบริษัทมี FCF สม่ำเสมอ แต่เลือกสะสมเงินสดไว้เฉยๆ โดยไม่มีแผนใช้ที่ชัดเจน ควรตั้งคำถามต่อว่าเป็นเพราะขาดโอกาสลงทุน หรือผู้บริหารระมัดระวังเกินไป</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="endcap">
+    บันทึกส่วนตัวเพื่อใช้ประกอบการวิเคราะห์การลงทุน — ไม่ใช่คำแนะนำการลงทุน
+  </footer>
+
+</div>
+</body>
+</html>
